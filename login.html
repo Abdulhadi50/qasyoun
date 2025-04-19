@@ -650,7 +650,7 @@
             auth.signInWithEmailAndPassword(email, password)
                 .then(() => {
                     showCustomAlert('تم تسجيل الدخول بنجاح!', 'success');
-                    window.location.href = 'home.html';
+                    window.location.href = 'index.html';
                 })
                 .catch((error) => {
                     console.error("خطأ في تسجيل الدخول:", error);
@@ -751,7 +751,7 @@
     console.log("تم حفظ بيانات المستخدم في Firestore");
     
     showCustomAlert('تم إنشاء الحساب بنجاح!', 'success');
-    window.location.href = 'home.html';
+    window.location.href = 'index.html';
   } catch (error) {
     console.error("خطأ في إنشاء الحساب:", error);
     showCustomAlert('خطأ في إنشاء الحساب: ' + error.message, 'error');
