@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500&display=swap" rel="stylesheet">
+    <title>البحث عن المستخدمين والتغريدات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00CC99;
+            --secondary: #e9ecef;
+            --text: #212529;
+            --muted: #6c757d;
+            --background: #fff;
+            --card-bg: #ffffff;
+            --success: #01B276;
+            --error: #dc3545;
+            --hover: #FE2B54;
+            --border: #ced4da;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Rubik', sans-serif;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-header {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px;
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 1em;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .suggestions {
+            position: absolute;
+            width: calc(100% - 40px);
+            max-width: 600px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+
+        .suggestion-item {
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.3s;
+        }
+
+        .suggestion-item:hover {
+            background: rgba(0, 123, 255, 0.1);
+        }
+
+        .suggestion-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .suggestion-name {
+            font-weight: bold;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .suggestion-handle {
+            color: var(--muted);
+            font-size: 0.9em;
+        }
+
+        .users-list, .tweets-list {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 15px;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--text);
+        }
+
+        .user-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.3s;
+        }
+
+        .user-item:hover {
+            background: rgba(0, 123, 255, 0.1);
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 10px;
+        }
+
+        .user-details {
+            flex-grow: 1;
+        }
+
+        .user-name {
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--text);
+            flex-wrap: wrap;
+        }
+
+        .verified-icon {
+            width: 17px;
+            height: 17px;
+        }
+
+        .user-handle {
+            color: var(--muted);
+            font-size: 0.9em;
+        }
+
+        .tweet-item {
+            background: var(--secondary);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .tweet-item-content {
+            margin-bottom: 10px;
+            line-height: 1.6;
+            word-wrap: break-word;
+            overflow-wrap: anywhere;
+            color: var(--text);
+        }
+
+        .tweet-item-image {
+            width: 100%;
+            border-radius: 15px;
+            margin-top: 10px;
+            max-height: 300px;
+            object-fit: cover;
+        }
+
+        .tweet-item-time {
+            color: var(--muted);
+            font-size: 0.9em;
+            margin-top: 10px;
+            display: block;
+        }
+
+        .no-users, .no-tweets {
+            text-align: center;
+            color: var(--muted);
+            font-size: 1.1em;
+            padding: 20px;
+        }
+
+        .profile-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .profile-modal-content {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: var(--muted);
+            font-size: 1.5em;
+        }
+
+        .profile-modal-header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .profile-modal-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border: 2px solid var(--primary);
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .profile-modal-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            color: var(--text);
+            flex-wrap: wrap;
+            word-break: break-word;
+        }
+
+        .profile-modal-handle {
+            color: var(--muted);
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .profile-modal-actions {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .support-btn {
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 15px;
+            transition: 0.3s;
+            background: none;
+        }
+
+        .support-btn:hover {
+            background: rgba(0, 123, 255, 0.1);
+        }
+
+        .support-btn i {
+            font-size: 1.2em;
+        }
+
+        .profile-modal-tweets {
+            margin-top: 20px;
+        }
+
+        .modal-tweet {
+            background: var(--secondary);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .modal-tweet-content {
+            margin-bottom: 10px;
+            line-height: 1.6;
+            word-wrap: break-word;
+            overflow-wrap: anywhere;
+            color: var(--text);
+        }
+
+        .modal-tweet-image {
+            width: 100%;
+            border-radius: 15px;
+            margin-top: 10px;
+            max-height: 300px;
+            object-fit: cover;
+        }
+
+        .modal-tweet-time {
+            color: var(--muted);
+            font-size: 0.9em;
+            margin-top: 10px;
+            display: block;
+        }
+
+        .tweet-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
+        }
+
+        .action-btn {
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 15px;
+            transition: 0.3s;
+            background: none;
+        }
+
+        .action-btn:hover {
+            background: rgba(0, 123, 255, 0.1);
+        }
+
+        .action-btn i {
+            font-size: 1.2em;
+        }
+
+        .liked {
+            color: var(--error) !important;
+        }
+
+        .image-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .image-modal-content {
+            max-width: 90%;
+            max-height: 90vh;
+            border-radius: 15px;
+            object-fit: contain;
+        }
+
+        .support-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2500;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .support-modal-content {
+            background: var(--card-bg);
+            max-width: 700px;
+            width: 90%;
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .support-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .balance-info {
+            color: var(--muted);
+            font-size: 1em;
+            margin-bottom: 15px;
+        }
+
+        .gift-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 15px;
+            padding: 10px 0;
+        }
+
+        .gift-item {
+            background: var(--secondary);
+            border-radius: 10px;
+            padding: 10px;
+            width: 120px;
+            flex-shrink: 0;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .gift-item:hover {
+            transform: scale(1.05);
+        }
+
+        .gift-item.selected {
+            border: 2px solid var(--primary);
+        }
+
+        .gift-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+
+        .gift-item span {
+            display: block;
+            color: var(--text);
+            font-size: 0.9em;
+        }
+
+        .gift-item .price {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .support-btn-modal {
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 15px;
+            margin-top: 15px;
+            transition: 0.3s;
+        }
+
+        .support-btn-modal:hover {
+            background: var(--hover);
+        }
+
+        .support-btn-modal.loading::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #fff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .comments-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2500;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .comments-modal-content {
+            background: var(--card-bg);
+            max-width: 600px;
+            width: 90%;
+            padding: 25px;
+            border-radius: 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .comments-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .comments-list {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px 0;
+        }
+
+        .comment-entry {
+            display: flex;
+            align-items: flex-start;
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comment-entry-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-left: 10px;
+            flex-shrink: 0;
+        }
+
+        .comment-entry-content {
+            flex-grow: 1;
+        }
+
+        .comment-entry-name {
+            font-weight: bold;
+            color: var(--text);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .comment-entry-text {
+            color: var(--muted);
+            word-wrap: break-word;
+            overflow-wrap: anywhere;
+            line-height: 1.4;
+        }
+
+        #comment-text {
+            width: 100%;
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            padding: 15px;
+            font-size: 1em;
+            resize: none;
+            min-height: 100px;
+            margin-top: 10px;
+        }
+
+        #comment-text:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .comment-post-btn {
+            background: var(--primary);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 10px;
+            border: none;
+            margin-top: 10px;
+        }
+
+        /* تصميم الرسائل المنبثقة المخصصة */
+        .custom-alert {
+            position: fixed;
+            top: -100px; /* مخفية في البداية */
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 4000;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            opacity: 0;
+            transition: all 0.4s ease-in-out;
+        }
+
+        .custom-alert.show {
+            top: 20px;
+            opacity: 1;
+        }
+
+        .custom-alert.success {
+            border-left: 6px solid var(--success);
+        }
+
+        .custom-alert.error {
+            border-left: 6px solid var(--error);
+        }
+
+        .custom-alert p {
+            margin: 0;
+            font-size: 1.1em;
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .custom-alert button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+            transition: background 0.3s;
+        }
+
+        .custom-alert button:hover {
+            background: var(--hover);
+        }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-storage.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="search-header">
+            <input type="text" class="search-input" id="searchInput" placeholder="ابحث عن مستخدم أو تغريدة" oninput="search(this.value)">
+            <div class="suggestions" id="suggestions"></div>
+        </div>
+        <div class="users-list" id="usersList">
+            <div class="section-title">المستخدمون</div>
+        </div>
+        <div class="tweets-list" id="tweetsList">
+            <div class="section-title">التغريدات</div>
+        </div>
+    </div>
+
+    <div class="profile-modal" id="profileModal" onclick="closeProfileModal()">
+        <div class="profile-modal-content" onclick="event.stopPropagation()">
+            <i class="fas fa-times close-btn" onclick="closeProfileModal()"></i>
+            <div class="profile-modal-header" id="profileModalHeader"></div>
+            <div class="profile-modal-actions" id="profileModalActions"></div>
+            <div class="profile-modal-tweets" id="profileModalTweets"></div>
+        </div>
+    </div>
+
+    <div class="image-modal" id="imageModal" onclick="closeImageModal()">
+        <img class="image-modal-content" id="fullImage" src="" alt="صورة المستخدم الكاملة">
+    </div>
+
+    <div class="support-modal" id="supportModal" onclick="closeSupportModal()">
+        <div class="support-modal-content" onclick="event.stopPropagation()">
+            <div class="support-header">
+                <h2>دعم المبدع</h2>
+                <button class="action-btn" onclick="closeSupportModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="balance-info" id="balanceInfo">رصيدك: <span id="userBalance">0</span> $</div>
+            <div class="gift-container" id="giftContainer"></div>
+            <button class="support-btn-modal" id="supportCreatorBtn" onclick="supportCreator()">إهداء</button>
+        </div>
+    </div>
+
+    <div class="comments-modal" id="commentsModal" onclick="closeCommentsModal()">
+        <div class="comments-modal-content" onclick="event.stopPropagation()">
+            <div class="comments-header">
+                <h2>التعليقات</h2>
+                <button class="action-btn" onclick="closeCommentsModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="comments-list" id="commentsList"></div>
+            <textarea id="comment-text" placeholder="اكتب تعليقًا..."></textarea>
+            <button class="comment-post-btn" onclick="postComment()">نشر التعليق</button>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4aW-Mr469PsIYT8n3jL--GbtRU5OTWdo",
+            MastersuthDomain: "smart-pay-6a9b8.firebaseapp.com",
+            projectId: "smart-pay-6a9b8",
+            storageBucket: "smart-pay-6a9b8.appspot.com",
+            messagingSenderId: "9418007073",
+            appId: "1:9418007073:web:72e0144eb56524fc263960"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+        let allUsers = [];
+        let allTweets = [];
+        let currentUserData = { balance: 0 };
+        let selectedGift = null;
+        let currentCreatorId = null;
+        let currentTweetId = null;
+
+        const gifts = [
+            { id: 1, name: "وردة ملكية", price: 0.5, image: "https://img.icons8.com/3d-fluency/999/rose.png" },
+            { id: 2, name: "قلب نابض", price: 5, image: "https://img.icons8.com/3d-fluency/999/heart-with-pulse.png" },
+            { id: 3, name: "نجمة متلألئة", price: 10, image: "https://img.icons8.com/3d-fluency/999/star.png" },
+            { id: 4, name: "لهب سحري", price: 15, image: "https://img.icons8.com/3d-fluency/999/fire-element.png" }
+        ];
+
+        firebase.auth().onAuthStateChanged(async (user) => {
+            if (user) {
+                try {
+                    const userDoc = await db.collection('users').doc(user.uid).get();
+                    currentUserData = userDoc.exists ? { ...userDoc.data(), balance: userDoc.data().balance || 0 } : { balance: 0 };
+
+                    const usersSnapshot = await db.collection('users').get();
+                    allUsers = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                    const tweetsSnapshot = await db.collection('tweets').get();
+                    allTweets = tweetsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                    showRandomUsersAndTweets();
+                } catch (error) {
+                    console.error("خطأ في جلب البيانات:", error);
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        // دالة لعرض الرسائل المنبثقة المخصصة
+        function showCustomAlert(message, type = 'success') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `custom-alert ${type}`;
+            alertDiv.innerHTML = `
+                <p>${message}</p>
+                <button onclick="this.parentElement.remove()">حسنًا</button>
+            `;
+            document.body.appendChild(alertDiv);
+            setTimeout(() => alertDiv.classList.add('show'), 10); // تأثير الظهور
+            setTimeout(() => alertDiv.remove(), 5000); // إزالة تلقائية بعد 5 ثوانٍ
+        }
+
+        function showRandomUsersAndTweets() {
+            const usersList = document.getElementById('usersList');
+            const tweetsList = document.getElementById('tweetsList');
+
+            const shuffledUsers = shuffleArray(allUsers).slice(0, 5);
+            const shuffledTweets = shuffleArray(allTweets).slice(0, 5);
+
+            renderUsers(shuffledUsers);
+            renderTweets(shuffledTweets);
+        }
+
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function search(query) {
+            const suggestions = document.getElementById('suggestions');
+            query = query.trim().toLowerCase();
+
+            if (query === '') {
+                suggestions.style.display = 'none';
+                showRandomUsersAndTweets();
+                return;
+            }
+
+            const filteredUsers = allUsers.filter(user => 
+                (user.name && user.name.toLowerCase().includes(query)) || 
+                (user.handle && user.handle.toLowerCase().includes(query))
+            );
+
+            const filteredTweets = allTweets.filter(tweet => 
+                tweet.content && tweet.content.toLowerCase().includes(query)
+            );
+
+            suggestions.innerHTML = filteredUsers.slice(0, 5).map(user => `
+                <div class="suggestion-item" onclick="showProfileModal('${user.id}')">
+                    <img src="${user.avatar || 'https://via.placeholder.com/40'}" class="suggestion-avatar" alt="صورة المستخدم">
+                    <div>
+                        <div class="suggestion-name">${user.name || 'مستخدم'}
+                            ${user.verified ? `<img src="https://img.icons8.com/color/999/tiktok-verified-account.png" class="verified-icon" alt="موثق">` : ''}
+                        </div>
+                        <div class="suggestion-handle">${user.handle || '@user'}</div>
+                    </div>
+                </div>
+            `).join('');
+            suggestions.style.display = filteredUsers.length > 0 ? 'block' : 'none';
+
+            renderUsers(filteredUsers);
+            renderTweets(filteredTweets);
+        }
+
+        function renderUsers(users) {
+            const usersList = document.getElementById('usersList');
+            usersList.innerHTML = `
+                <div class="section-title">المستخدمون</div>
+                ${users.length > 0 
+                    ? users.map(user => `
+                        <div class="user-item" onclick="showProfileModal('${user.id}')">
+                            <img src="${user.avatar || 'https://via.placeholder.com/50'}" class="user-avatar" alt="صورة المستخدم">
+                            <div class="user-details">
+                                <div class="user-name">${user.name || 'مستخدم'}
+                                    ${user.verified ? `<img src="https://img.icons8.com/color/999/tiktok-verified-account.png" class="verified-icon" alt="موثق">` : ''}
+                                </div>
+                                <div class="user-handle">${user.handle || '@user'}</div>
+                            </div>
+                        </div>
+                    `).join('')
+                    : '<div class="no-users">لا توجد مستخدمين مطابقين</div>'}
+            `;
+        }
+
+        async function renderTweets(tweets) {
+            const tweetsList = document.getElementById('tweetsList');
+            const tweetItems = await Promise.all(tweets.map(async tweet => {
+                const userDoc = await db.collection('users').doc(tweet.userId).get();
+                const userData = userDoc.exists ? userDoc.data() : {};
+                return `
+                    <div class="tweet-item" onclick="showProfileModal('${tweet.userId}')">
+                        <div class="tweet-item-content">${formatText(tweet.content)}</div>
+                        ${tweet.image ? `<img src="${tweet.image}" class="tweet-item-image" alt="صورة التغريدة">` : ''}
+                        <span class="tweet-item-time">${timeAgo(tweet.time instanceof firebase.firestore.Timestamp ? tweet.time.toMillis() : tweet.time)}</span>
+                    </div>
+                `;
+            }));
+
+            tweetsList.innerHTML = `
+                <div class="section-title">التغريدات</div>
+                ${tweets.length > 0 
+                    ? tweetItems.join('')
+                    : '<div class="no-tweets">لا توجد تغريدات مطابقة</div>'}
+            `;
+        }
+
+        async function showProfileModal(userId) {
+            try {
+                const userDoc = await db.collection('users').doc(userId).get();
+                const userData = userDoc.exists ? userDoc.data() : {};
+
+                const tweetsSnapshot = await db.collection('tweets').where('userId', '==', userId).get();
+                const userTweets = tweetsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                const profileModalHeader = document.getElementById('profileModalHeader');
+                const profileModalActions = document.getElementById('profileModalActions');
+                const profileModalTweets = document.getElementById('profileModalTweets');
+
+                profileModalHeader.innerHTML = `
+                    <img src="${userData.avatar || 'https://via.placeholder.com/100'}" class="profile-modal-avatar" alt="صورة المستخدم" onclick="openImageModal('${userData.avatar || 'https://via.placeholder.com/100'}')">
+                    <div class="profile-modal-name">${userData.name || 'مستخدم'}
+                        ${userData.verified ? `<img src="https://img.icons8.com/color/999/tiktok-verified-account.png" class="verified-icon" alt="موثق">` : ''}
+                    </div>
+                    <div class="profile-modal-handle">${userData.handle || '@user'}</div>
+                `;
+
+                profileModalActions.innerHTML = `
+                    <button class="support-btn" onclick="openSupportModal('${userId}')">
+                        <i class="fas fa-gift"></i> دعم المبدع
+                    </button>
+                `;
+
+                profileModalTweets.innerHTML = userTweets.length > 0 
+                    ? userTweets.map(tweet => {
+                        const comments = tweet.comments ? Object.values(tweet.comments) : [];
+                        return `
+                            <div class="modal-tweet">
+                                <div class="modal-tweet-content">${formatText(tweet.content)}</div>
+                                ${tweet.image ? `<img src="${tweet.image}" class="modal-tweet-image" alt="صورة التغريدة">` : ''}
+                                <span class="modal-tweet-time">${timeAgo(tweet.time instanceof firebase.firestore.Timestamp ? tweet.time.toMillis() : tweet.time)}</span>
+                                <div class="tweet-actions">
+                                    <button class="action-btn" onclick="toggleLike('${tweet.id}')">
+                                        <i class="fas fa-heart ${tweet.likedBy && tweet.likedBy[firebase.auth().currentUser.uid] ? 'liked' : ''}"></i>
+                                        <span>${formatNumber(tweet.likes || 0)}</span>
+                                    </button>
+                                    <button class="action-btn" onclick="openCommentsModal('${tweet.id}')">
+                                        <i class="fas fa-comment"></i>
+                                        <span>${formatNumber(comments.length)}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')
+                    : '<div class="no-users">لا توجد تغريدات لهذا المستخدم</div>';
+
+                document.getElementById('profileModal').style.display = 'flex';
+            } catch (error) {
+                console.error("خطأ في تحميل ملف المستخدم:", error);
+            }
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profileModal').style.display = 'none';
+        }
+
+        function openImageModal(imageUrl) {
+            const imageModal = document.getElementById('imageModal');
+            const fullImage = document.getElementById('fullImage');
+            fullImage.src = imageUrl;
+            imageModal.style.display = 'flex';
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+
+        function openSupportModal(creatorId) {
+            const user = firebase.auth().currentUser;
+            if (!user) {
+                showCustomAlert('يرجى تسجيل الدخول لدعم المبدع', 'error');
+                window.location.href = 'login.html';
+                return;
+            }
+            if (user.uid === creatorId) {
+                showCustomAlert('لا يمكنك دعم نفسك!', 'error');
+                return;
+            }
+
+            currentCreatorId = creatorId;
+            document.getElementById('userBalance').textContent = currentUserData.balance || 0;
+            const giftContainer = document.getElementById('giftContainer');
+            giftContainer.innerHTML = '';
+            gifts.forEach(gift => {
+                const giftEl = document.createElement('div');
+                giftEl.className = 'gift-item';
+                giftEl.innerHTML = `
+                    <img src="${gift.image}" alt="${gift.name}">
+                    <span>${gift.name}</span>
+                    <span class="price">${gift.price} $</span>
+                `;
+                giftEl.onclick = () => selectGift(gift);
+                giftContainer.appendChild(giftEl);
+            });
+            document.getElementById('supportModal').style.display = 'flex';
+        }
+
+        function selectGift(gift) {
+            selectedGift = gift;
+            const giftItems = document.querySelectorAll('.gift-item');
+            giftItems.forEach(item => item.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+        }
+
+        function closeSupportModal() {
+            document.getElementById('supportModal').style.display = 'none';
+            selectedGift = null;
+            currentCreatorId = null;
+        }
+
+        async function supportCreator() {
+            const user = firebase.auth().currentUser;
+            if (!user || !selectedGift || !currentCreatorId) {
+                showCustomAlert('يرجى اختيار هدية أولاً', 'error');
+                return;
+            }
+            
+            if (currentUserData.balance < selectedGift.price) {
+                showCustomAlert('رصيدك غير كافٍ!', 'error');
+                return;
+            }
+            
+            const supportBtn = document.getElementById('supportCreatorBtn');
+            supportBtn.classList.add('loading');
+            supportBtn.disabled = true;
+            
+            try {
+                await db.runTransaction(async (transaction) => {
+                    const userRef = db.collection('users').doc(user.uid);
+                    const creatorRef = db.collection('users').doc(currentCreatorId);
+                    
+                    const userDoc = await transaction.get(userRef);
+                    const creatorDoc = await transaction.get(creatorRef);
+                    
+                    if (!userDoc.exists || !creatorDoc.exists) throw new Error('المستخدم غير موجود');
+                    
+                    const newUserBalance = (userDoc.data().balance || 0) - selectedGift.price;
+                    const newCreatorBalance = (creatorDoc.data().balance || 0) + selectedGift.price;
+                    
+                    transaction.update(userRef, { balance: newUserBalance });
+                    transaction.update(creatorRef, { balance: newCreatorBalance });
+                    
+                    currentUserData.balance = newUserBalance;
+                });
+                
+                await db.collection('users').doc(currentCreatorId).collection('received_gifts').add({
+                    giftId: selectedGift.id,
+                    senderId: user.uid,
+                    time: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                showCustomAlert(`تم إهداء ${selectedGift.name} بنجاح!`, 'success');
+                closeSupportModal();
+            } catch (error) {
+                console.error("خطأ في دعم المبدع:", error);
+                showCustomAlert('حدث خطأ أثناء الدعم: ' + error.message, 'error');
+            } finally {
+                supportBtn.classList.remove('loading');
+                supportBtn.disabled = false;
+            }
+        }
+
+        async function toggleLike(tweetId) {
+            const user = firebase.auth().currentUser;
+            if (!user) return;
+
+            const tweetRef = db.collection('tweets').doc(tweetId);
+            try {
+                await db.runTransaction(async (transaction) => {
+                    const tweetDoc = await transaction.get(tweetRef);
+                    if (!tweetDoc.exists) return;
+
+                    const tweet = tweetDoc.data();
+                    const likedBy = tweet.likedBy || {};
+                    if (likedBy[user.uid]) {
+                        transaction.update(tweetRef, {
+                            likes: (tweet.likes || 0) - 1,
+                            [`likedBy.${user.uid}`]: firebase.firestore.FieldValue.delete()
+                        });
+                    } else {
+                        transaction.update(tweetRef, {
+                            likes: (tweet.likes || 0) + 1,
+                            [`likedBy.${user.uid}`]: true
+                        });
+                    }
+                });
+                const tweet = allTweets.find(t => t.id === tweetId);
+                showProfileModal(tweet.userId); // إعادة تحميل الملف الشخصي
+            } catch (error) {
+                console.error("خطأ في تبديل الإعجاب:", error);
+            }
+        }
+
+        async function openCommentsModal(tweetId) {
+            currentTweetId = tweetId;
+            const tweet = allTweets.find(t => t.id === tweetId);
+            const comments = tweet.comments ? Object.values(tweet.comments) : [];
+            const commentsList = document.getElementById('commentsList');
+            let commentsHtml = '';
+
+            if (comments.length > 0) {
+                for (const comment of comments) {
+                    const commentUserId = comment.userId;
+                    let commentUserVerified = commentUserId === firebase.auth().currentUser.uid ? currentUserData.verified || false : comment.verified || false;
+                    commentsHtml += `
+                        <div class="comment-entry">
+                            <img src="${comment.avatar || 'https://via.placeholder.com/40'}" class="comment-entry-avatar" alt="صورة المستخدم">
+                            <div class="comment-entry-content">
+                                <div class="comment-entry-name">
+                                    ${comment.userName || 'مستخدم'}
+                                    ${commentUserVerified ? `<img src="https://img.icons8.com/color/999/tiktok-verified-account.png" class="verified-icon" alt="موثق">` : ''}
+                                </div>
+                                <div class="comment-entry-text">${comment.text}</div>
+                            </div>
+                        </div>`;
+                }
+            } else {
+                commentsHtml = '<div class="comment-entry">لا توجد تعليقات بعد</div>';
+            }
+
+            commentsList.innerHTML = commentsHtml;
+            document.getElementById('comment-text').value = '';
+            document.getElementById('commentsModal').style.display = 'flex';
+        }
+
+        function closeCommentsModal() {
+            document.getElementById('commentsModal').style.display = 'none';
+            currentTweetId = null;
+        }
+
+        async function postComment() {
+            const user = firebase.auth().currentUser;
+            if (!user || !currentTweetId) return;
+
+            const commentText = document.getElementById('comment-text').value;
+            if (!commentText.trim()) return;
+
+            const tweetRef = db.collection('tweets').doc(currentTweetId);
+            const commentId = db.collection('tweets').doc().id;
+            try {
+                await tweetRef.update({
+                    [`comments.${commentId}`]: {
+                        text: commentText,
+                        userId: user.uid,
+                        userName: currentUserData.name || 'مستخدم',
+                        avatar: currentUserData.avatar || 'https://via.placeholder.com/30',
+                        time: firebase.firestore.FieldValue.serverTimestamp()
+                    }
+                });
+                document.getElementById('comment-text').value = '';
+                closeCommentsModal();
+                showProfileModal(allTweets.find(t => t.id === currentTweetId).userId);
+            } catch (error) {
+                console.error("خطأ في نشر التعليق:", error);
+            }
+        }
+
+        function formatText(text) {
+            return text
+                .replace(/#(\w+)/g, '<span style="color: var(--primary);">#$1</span>')
+                .replace(/@(\w+)/g, '<span style="color: var(--primary);">@$1</span>');
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000) {
+                const formatted = (num / 1000).toFixed(num % 1000 >= 100 ? 1 : 0);
+                return formatted.endsWith('.0') ? `${formatted.slice(0, -2)}K` : `${formatted}K`;
+            }
+            return num;
+        }
+
+        function timeAgo(timestamp) {
+            const now = Date.now();
+            const diff = now - timestamp;
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+
+            if (minutes < 60) return `منذ ${minutes} دقيقة`;
+            if (hours < 24) return `منذ ${hours} ساعة`;
+            return `منذ ${days} يوم`;
+        }
+    </script>
+</body>
+</html>

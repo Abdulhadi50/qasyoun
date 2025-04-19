@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500&display=swap" rel="stylesheet">
+    <title>الملف الشخصي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+    :root {
+        --primary: #00CC99;
+        --secondary: #e9ecef;
+        --text: #212529;
+        --muted: #6c757d;
+        --background: #fff;
+        --card-bg: #ffffff;
+        --success: #01B276;
+        --error: #FE2B54;
+        --hover: #00CC99;
+        --border: #ced4da;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Rubik', sans-serif;
+    }
+
+    body {
+        background: var(--background);
+        color: var(--text);
+        padding: 20px;
+        user-select: none;
+    }
+
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .profile-header {
+        background: var(--card-bg);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid var(--border);
+        text-align: center;
+    }
+
+    .profile-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 15px;
+        transition: transform 0.3s ease;
+    }
+
+    .profile-avatar:hover {
+        transform: scale(1.05);
+    }
+
+    .profile-name {
+        font-size: 1.0em;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .profile-handle {
+        color: var(--muted);
+        font-size: 1.0em;
+        margin-bottom: 10px;
+    }
+
+    .profile-stats {
+        font-size: 1em;
+        color: var(--muted);
+        margin-bottom: 15px;
+    }
+
+    .edit-btn {
+        background: var(--primary);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 12px;
+        border: none;
+        transition: background 0.3s, transform 0.3s;
+        font-size: 1em;
+    }
+
+    .edit-btn:hover {
+        background: var(--hover);
+        transform: translateY(-2px);
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .modal-content {
+        background: var(--card-bg);
+        border-radius: 15px;
+        padding: 20px;
+        max-width: 500px;
+        width: 90%;
+        border: 1px solid var(--border);
+        text-align: center;
+        position: relative;
+    }
+
+    .close-btn {
+        position: absolute;
+        top: 1px;
+        left: 15px;
+        background: none;
+        border: none;
+        font-size: 2.5em;
+        color: var(--muted);
+    }
+
+    .modal-content .avatar-preview {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 15px;
+        border: 2px dashed var(--primary);
+    }
+
+    .modal-content input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        background: var(--secondary);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--text);
+        font-size: 1em;
+        transition: border-color 0.3s ease;
+    }
+
+    .modal-content input:focus {
+        outline: none;
+        border-color: var(--primary);
+    }
+
+    .modal-content label {
+        display: block;
+        text-align: right;
+        color: var(--muted);
+        font-size: 0.9em;
+        margin-bottom: 5px;
+    }
+
+    .save-btn {
+        background: var(--primary);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 12px;
+        border: none;
+        transition: background 0.3s, transform 0.3s;
+        font-size: 0.9em;
+        margin-top: 5px;
+    }
+
+    .save-btn:hover {
+        background: var(--hover);
+        transform: translateY(-2px);
+    }
+
+    .save-btn.loading::after {
+        content: '';
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        border: 2px solid #fff;
+        border-top: 2px solid transparent;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    @keyframes spin {
+        0% { transform: translateY(-50%) rotate(0deg); }
+        100% { transform: translateY(-50%) rotate(360deg); }
+    }
+
+    .edit-avatar-btn {
+        background: none;
+        border: none;
+        color: var(--primary);
+        font-size: 1.2em;
+        transition: transform 0.3s;
+        margin-bottom: 15px;
+    }
+
+    .edit-avatar-btn:hover {
+        transform: scale(1.1);
+    }
+
+    .tabs {
+        display: flex;
+        justify-content: space-around;
+        background: var(--card-bg);
+        border-radius: 15px;
+        padding: 5px;
+        margin-bottom: 20px;
+        border: 1px solid var(--border);
+    }
+
+    .tab-btn {
+        color: var(--muted);
+        font-size: 1.0em;
+        padding: 10px 15px;
+        transition: color 0.3s, background 0.3s;
+    }
+
+    .tab-btn.active {
+        color: var(--primary);
+        background: rgba(0, 123, 255, 0.1);
+        border-radius: 10px;
+    }
+
+    .tab-btn:hover {
+        color: var(--primary);
+    }
+
+    .tab-content {
+        display: none;
+        background: var(--card-bg);
+        border-radius: 15px;
+        padding: 15px;
+        border: 1px solid var(--border);
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    .tweet, .comment-entry {
+        background: var(--secondary);
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 10px;
+        position: relative;
+        transition: transform 0.3s ease;
+    }
+
+    .tweet:hover, .comment-entry:hover {
+        transform: translateY(-2px);
+    }
+
+    .tweet-content, .comment-text {
+        margin-bottom: 10px;
+        line-height: 1.6;
+        word-wrap: break-word;
+        overflow-wrap: anywhere;
+    }
+
+    .tweet-image {
+        width: 100%;
+        border-radius: 15px;
+        margin-top: 10px;
+        max-height: 300px;
+        object-fit: cover;
+    }
+
+    .tweet-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+
+    .action-btn {
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 15px;
+        background: none;
+        transition: 0.3s;
+    }
+
+    .action-btn:hover {
+        background: rgba(0, 123, 255, 0.1);
+        color: var(--primary);
+    }
+
+    .delete-btn {
+        color: var(--error);
+    }
+
+    .delete-btn:hover {
+        color: #c82333;
+        background: rgba(220, 53, 69, 0.1);
+    }
+
+    .liked {
+        color: #e0245e !important;
+    }
+
+    .tweet-time {
+        color: var(--muted);
+        font-size: 0.9em;
+        margin-top: 10px;
+        display: block;
+    }
+
+    .no-items {
+        text-align: center;
+        color: var(--muted);
+        font-size: 1.1em;
+        padding: 20px;
+    }
+
+    .verified-icon {
+        width: 17px;
+        height: 17px;
+        margin-top: -5px;
+        vertical-align: middle;
+    }
+
+    .custom-alert {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--card-bg);
+        padding: 20px;
+        border-radius: 12px;
+        z-index: 2000;
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        opacity: 0;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .custom-alert.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+
+    .custom-alert.success {
+        border-left: 4px solid var(--success);
+    }
+
+    .custom-alert.error {
+        border-left: 4px solid var(--error);
+    }
+
+    .custom-alert p {
+        margin: 0 0 15px;
+        font-size: 1em;
+        color: var(--text);
+    }
+
+    .custom-alert button {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        transition: background 0.3s, transform 0.3s;
+    }
+
+    .custom-alert button:hover {
+        background: var(--hover);
+        transform: translateY(-2px);
+    }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-storage.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="profile-header" id="profileHeader">
+            <img id="profileAvatar" src="https://via.placeholder.com/100" class="profile-avatar">
+            <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="storeAvatar(event)">
+            <div class="profile-name" id="profileName">مستخدم</div>
+            <div class="profile-handle" id="profileHandle">@user</div>
+            <div class="profile-stats" id="profileFollowers">المتابعون: 0</div>
+            <button class="edit-btn" onclick="toggleEditForm()">تعديل الملف الشخصي</button>
+        </div>
+
+        <div class="modal" id="editModal">
+            <div class="modal-content">
+                <button class="close-btn" onclick="toggleEditForm()">×</button>
+                <img id="avatarPreview" src="https://via.placeholder.com/100" class="avatar-preview">
+                <label for="avatarInput">الصورة الشخصية (حد أقصى 3 ميجابايت)</label>
+                <button class="edit-avatar-btn" onclick="document.getElementById('avatarInput').click()">
+                    <i class="fas fa-camera"></i> تعديل الصورة
+                </button>
+                <button class="save-btn" onclick="saveAvatar()">حفظ الصورة</button>
+                <label for="editName">الاسم (حد أقصى 30 حرفًا)</label>
+                <input type="text" id="editName" placeholder="أدخل اسمك" maxlength="30">
+                <button class="save-btn" onclick="saveName()">حفظ الاسم</button>
+                <label for="editHandle">المعرف (يبدأ بـ @، أحرف إنجليزية وأرقام فقط)</label>
+                <input type="text" id="editHandle" placeholder="@معرفك" oninput="ensureAtSymbol(this)" maxlength="20">
+                <button class="save-btn" onclick="saveHandle()">حفظ المعرف</button>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab-btn active" onclick="showTab('tweets')">التغريدات</div>
+            <div class="tab-btn" onclick="showTab('likedTweets')">المعجب بها</div>
+            <div class="tab-btn" onclick="showTab('comments')">التعليقات</div>
+        </div>
+
+        <div id="tweets" class="tab-content active"></div>
+        <div id="likedTweets" class="tab-content"></div>
+        <div id="comments" class="tab-content"></div>
+    </div>
+
+    <script>
+        // Define showCustomAlert first
+        function showCustomAlert(message, type = 'success') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `custom-alert ${type}`;
+            alertDiv.innerHTML = `
+                <p>${message}</p>
+                <button onclick="this.parentElement.remove()">حسنًا</button>
+            `;
+            document.body.appendChild(alertDiv);
+            setTimeout(() => alertDiv.classList.add('show'), 10);
+            setTimeout(() => alertDiv.remove(), 5000);
+        }
+
+        // Firebase configuration and initialization
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4aW-Mr469PsIYT8n3jL--GbtRU5OTWdo",
+            authDomain: "smart-pay-6a9b8.firebaseapp.com",
+            projectId: "smart-pay-6a9b8",
+            storageBucket: "smart-pay-6a9b8.appspot.com",
+            messagingSenderId: "9418007073",
+            appId: "1:9418007073:web:72e0144eb56524fc263960"
+        };
+
+        try {
+            firebase.initializeApp(firebaseConfig);
+            console.log("Firebase تم تهيئته بنجاح");
+        } catch (error) {
+            console.error("خطأ في تهيئة Firebase:", error);
+            showCustomAlert("حدث خطأ أثناء تهيئة التطبيق: " + error.message, 'error');
+        }
+
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+        let currentUserData = {};
+        let userTweets = [];
+        let likedTweets = [];
+        let userComments = [];
+        let newAvatarUrl = null;
+
+        firebase.auth().onAuthStateChanged(async (user) => {
+            if (user) {
+                try {
+                    const userDoc = await db.collection('users').doc(user.uid).get();
+                    currentUserData = userDoc.exists ? userDoc.data() : {};
+                    loadProfile(user.uid);
+                    loadUserTweets(user.uid);
+                    loadLikedTweets(user.uid);
+                    loadUserComments(user.uid);
+                } catch (error) {
+                    console.error("خطأ في جلب بيانات المستخدم:", error);
+                    showCustomAlert('خطأ في جلب بيانات المستخدم: ' + error.message, 'error');
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        function loadProfile(userId) {
+            const profileAvatar = document.getElementById('profileAvatar');
+            const profileName = document.getElementById('profileName');
+            const profileHandle = document.getElementById('profileHandle');
+            const profileFollowers = document.getElementById('profileFollowers');
+
+            profileAvatar.src = currentUserData.avatar || 'https://via.placeholder.com/100';
+            profileName.textContent = currentUserData.name || 'مستخدم';
+            if (currentUserData.verified) {
+                profileName.innerHTML += ` <img src="https://img.icons8.com/color/999/tiktok-verified-account.png" class="verified-icon" alt="موثق">`;
+            }
+            profileHandle.textContent = currentUserData.handle || '@user';
+
+            // عرض عدد المتابعين
+            const followers = Array.isArray(currentUserData.followers) ? currentUserData.followers.length : 0;
+            profileFollowers.textContent = `المتابعون: ${followers}`;
+        }
+
+        function toggleEditForm() {
+            const editModal = document.getElementById('editModal');
+            const editName = document.getElementById('editName');
+            const editHandle = document.getElementById('editHandle');
+            const avatarPreview = document.getElementById('avatarPreview');
+            
+            if (editModal.style.display === 'flex') {
+                editModal.style.display = 'none';
+            } else {
+                editModal.style.display = 'flex';
+                editName.value = currentUserData.name || '';
+                editHandle.value = currentUserData.handle || '@user';
+                avatarPreview.src = currentUserData.avatar || 'https://via.placeholder.com/100';
+                newAvatarUrl = null;
+            }
+        }
+
+        function ensureAtSymbol(input) {
+            if (!input.value.startsWith('@')) {
+                input.value = '@' + input.value.replace('@', '');
+            }
+        }
+
+        function storeAvatar(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const fileSizeMB = file.size / (1024 * 1024);
+            if (fileSizeMB > 3) {
+                showCustomAlert('حجم الصورة يتجاوز الحد الأقصى (3 ميجا بايت)', 'error');
+                event.target.value = '';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function() {
+                newAvatarUrl = reader.result;
+                document.getElementById('avatarPreview').src = newAvatarUrl;
+                showCustomAlert('تم اختيار الصورة بنجاح!', 'success');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function formatTimeRemaining(ms) {
+            const days = Math.floor(ms / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+            let result = '';
+            if (days > 0) result += `${days} يوم `;
+            if (hours > 0) result += `${hours} ساعة `;
+            if (minutes > 0 && days === 0) result += `${minutes} دقيقة `;
+            return result.trim() || 'أقل من دقيقة';
+        }
+
+        async function updateUserInfoInTweets(userId, updates) {
+            try {
+                const tweetsSnapshot = await db.collection('tweets').where('userId', '==', userId).get();
+                if (tweetsSnapshot.empty) return;
+
+                const batch = db.batch();
+                tweetsSnapshot.forEach(doc => {
+                    batch.update(doc.ref, updates);
+                });
+
+                await batch.commit();
+            } catch (error) {
+                console.error("خطأ في تحديث بيانات المستخدم في التغريدات:", error);
+                showCustomAlert('خطأ في تحديث بيانات المستخدم في التغريدات: ' + error.message, 'error');
+            }
+        }
+
+        async function updateUserInfoInComments(userId, updates) {
+            try {
+                const tweetsSnapshot = await db.collection('tweets').get();
+                if (tweetsSnapshot.empty) return;
+
+                const batch = db.batch();
+                tweetsSnapshot.forEach(doc => {
+                    const tweet = doc.data();
+                    if (tweet.comments) {
+                        Object.entries(tweet.comments).forEach(([commentId, comment]) => {
+                            if (comment.userId === userId) {
+                                const commentUpdates = {};
+                                if (updates.name) commentUpdates[`comments.${commentId}.userName`] = updates.name;
+                                if (updates.avatar) commentUpdates[`comments.${commentId}.avatar`] = updates.avatar;
+                                if (Object.keys(commentUpdates).length > 0) {
+                                    batch.update(doc.ref, commentUpdates);
+                                }
+                            }
+                        });
+                    }
+                });
+
+                await batch.commit();
+            } catch (error) {
+                console.error("خطأ في تحديث بيانات المستخدم في التعليقات:", error);
+                showCustomAlert('خطأ في تحديث بيانات المستخدم في التعليقات: ' + error.message, 'error');
+            }
+        }
+
+        async function saveAvatar() {
+            const user = firebase.auth().currentUser;
+            if (!user) return;
+
+            const saveBtn = document.querySelector('.save-btn[onclick="saveAvatar()"]');
+            if (!newAvatarUrl) {
+                showCustomAlert('لم يتم اختيار صورة جديدة', 'error');
+                return;
+            }
+
+            saveBtn.classList.add('loading');
+            saveBtn.disabled = true;
+
+            try {
+                const now = firebase.firestore.Timestamp.now();
+                const nowMs = now.toMillis();
+                const lastAvatarChange = currentUserData.lastAvatarChange || { toMillis: () => 0 };
+                const timeSinceLastAvatarChange = nowMs - lastAvatarChange.toMillis();
+                const avatarCooldown = 3 * 24 * 60 * 60 * 1000; // 3 أيام
+
+                if (timeSinceLastAvatarChange < avatarCooldown) {
+                    const timeRemaining = avatarCooldown - timeSinceLastAvatarChange;
+                    showCustomAlert(`يمكنك تغيير الصورة بعد ${formatTimeRemaining(timeRemaining)}`, 'error');
+                    return;
+                }
+
+                const file = document.getElementById('avatarInput').files[0];
+                const storageRef = storage.ref();
+                const oldAvatarUrl = currentUserData.avatar;
+
+                if (oldAvatarUrl && !oldAvatarUrl.includes('via.placeholder.com')) {
+                    await storage.refFromURL(oldAvatarUrl).delete().catch(error => {
+                        console.error(`خطأ في حذف الصورة القديمة:`, error);
+                    });
+                }
+
+                const newAvatarRef = storageRef.child(`avatars/${user.uid}/${Date.now()}_${file.name}`);
+                await newAvatarRef.put(file);
+                const uploadedAvatarUrl = await newAvatarRef.getDownloadURL();
+
+                await db.collection('users').doc(user.uid).update({
+                    avatar: uploadedAvatarUrl,
+                    lastAvatarChange: now
+                });
+
+                await updateUserInfoInTweets(user.uid, { avatar: uploadedAvatarUrl });
+                await updateUserInfoInComments(user.uid, { avatar: uploadedAvatarUrl });
+
+                currentUserData.avatar = uploadedAvatarUrl;
+                currentUserData.lastAvatarChange = now;
+                loadProfile(user.uid);
+                showCustomAlert('تم حفظ الصورة بنجاح!', 'success');
+                toggleEditForm();
+            } catch (error) {
+                console.error("خطأ في حفظ الصورة:", error);
+                showCustomAlert('خطأ في حفظ الصورة: ' + error.message, 'error');
+            } finally {
+                saveBtn.classList.remove('loading');
+                saveBtn.disabled = false;
+            }
+        }
+
+        async function saveName() {
+            const user = firebase.auth().currentUser;
+            if (!user) return;
+
+            const newName = document.getElementById('editName').value.trim();
+            const saveBtn = document.querySelector('.save-btn[onclick="saveName()"]');
+
+            if (!newName) {
+                showCustomAlert('الاسم لا يمكن أن يكون فارغًا', 'error');
+                return;
+            }
+            if (newName.length > 30) {
+                showCustomAlert('الاسم يجب ألا يتجاوز 30 حرفًا', 'error');
+                return;
+            }
+            if (newName === currentUserData.name) {
+                showCustomAlert('لم يتم تغيير الاسم', 'error');
+                return;
+            }
+
+            saveBtn.classList.add('loading');
+            saveBtn.disabled = true;
+
+            try {
+                const now = firebase.firestore.Timestamp.now();
+                const nowMs = now.toMillis();
+                const lastNameChange = currentUserData.lastNameChange || { toMillis: () => 0 };
+                const timeSinceLastNameChange = nowMs - lastNameChange.toMillis();
+                const nameCooldown = 7 * 24 * 60 * 60 * 1000; // 7 أيام
+
+                if (timeSinceLastNameChange < nameCooldown) {
+                    const timeRemaining = nameCooldown - timeSinceLastNameChange;
+                    showCustomAlert(`يمكنك تغيير الاسم بعد ${formatTimeRemaining(timeRemaining)}`, 'error');
+                    return;
+                }
+
+                await db.collection('users').doc(user.uid).update({
+                    name: newName,
+                    lastNameChange: now
+                });
+
+                await updateUserInfoInTweets(user.uid, { name: newName });
+                await updateUserInfoInComments(user.uid, { name: newName });
+
+                currentUserData.name = newName;
+                currentUserData.lastNameChange = now;
+                loadProfile(user.uid);
+                showCustomAlert('تم حفظ الاسم بنجاح!', 'success');
+                toggleEditForm();
+            } catch (error) {
+                console.error("خطأ في حفظ الاسم:", error);
+                showCustomAlert('خطأ في حفظ الاسم: ' + error.message, 'error');
+            } finally {
+                saveBtn.classList.remove('loading');
+                saveBtn.disabled = false;
+            }
+        }
+
+        async function saveHandle() {
+            const user = firebase.auth().currentUser;
+            if (!user) return;
+
+            let newHandle = document.getElementById('editHandle').value.trim();
+            const saveBtn = document.querySelector('.save-btn[onclick="saveHandle()"]');
+
+            if (!newHandle.startsWith('@')) {
+                newHandle = '@' + newHandle.replace('@', '');
+            }
+
+            if (newHandle.length > 20) {
+                showCustomAlert('معرف المستخدم يجب ألا يتجاوز 20 حرفًا', 'error');
+                return;
+            }
+
+            const handleWithoutAt = newHandle.substring(1);
+            const handleRegex = /^(?=.*[A-Za-z])[A-Za-z0-9_]{4,}$/;
+
+            if (!handleRegex.test(handleWithoutAt)) {
+                showCustomAlert('معرف المستخدم يجب أن يكون 4 أحرف أو أكثر، يحتوي على أحرف إنجليزية على الأقل، ويمكن أن يحتوي على أرقام أو شرطة سفلية (_) بدون مسافات، ولا يمكن أن يكون أرقامًا فقط', 'error');
+                return;
+            }
+
+            if (newHandle === currentUserData.handle) {
+                showCustomAlert('لم يتم تغيير المعرف', 'error');
+                return;
+            }
+
+            saveBtn.classList.add('loading');
+            saveBtn.disabled = true;
+
+            try {
+                const now = firebase.firestore.Timestamp.now();
+                const nowMs = now.toMillis();
+                const lastHandleChange = currentUserData.lastHandleChange || { toMillis: () => 0 };
+                const timeSinceLastHandleChange = nowMs - lastHandleChange.toMillis();
+                const handleCooldown = 14 * 24 * 60 * 60 * 1000; // 14 يومًا
+
+                if (timeSinceLastHandleChange < handleCooldown) {
+                    const timeRemaining = handleCooldown - timeSinceLastHandleChange;
+                    showCustomAlert(`يمكنك تغيير معرف المستخدم بعد ${formatTimeRemaining(timeRemaining)}`, 'error');
+                    return;
+                }
+
+                const handleSnapshot = await db.collection('users').where('handle', '==', newHandle).get();
+                if (!handleSnapshot.empty && handleSnapshot.docs[0].id !== user.uid) {
+                    showCustomAlert('معرف المستخدم مستخدم بالفعل، اختر معرفًا آخر', 'error');
+                    return;
+                }
+
+                await db.collection('users').doc(user.uid).update({
+                    handle: newHandle,
+                    lastHandleChange: now
+                });
+
+                await updateUserInfoInTweets(user.uid, { handle: newHandle });
+
+                currentUserData.handle = newHandle;
+                currentUserData.lastHandleChange = now;
+                loadProfile(user.uid);
+                showCustomAlert('تم حفظ المعرف بنجاح!', 'success');
+                toggleEditForm();
+            } catch (error) {
+                console.error("خطأ في حفظ المعرف:", error);
+                showCustomAlert('خطأ في حفظ المعرف: ' + error.message, 'error');
+            } finally {
+                saveBtn.classList.remove('loading');
+                saveBtn.disabled = false;
+            }
+        }
+
+        function loadUserTweets(userId) {
+            db.collection('tweets').where('userId', '==', userId).get()
+                .then((snapshot) => {
+                    userTweets = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    renderUserTweets(userId);
+                })
+                .catch((error) => {
+                    console.error("خطأ في جلب التغريدات:", error);
+                    showCustomAlert('خطأ في جلب التغريدات: ' + error.message, 'error');
+                });
+        }
+
+        function renderUserTweets(userId) {
+            const tweetsList = document.getElementById('tweets');
+            tweetsList.innerHTML = userTweets.length > 0 
+                ? userTweets.map(tweet => `
+                    <div class="tweet">
+                        <div class="tweet-content">${formatText(tweet.content)}</div>
+                        ${tweet.media && tweet.mediaType === 'image' ? `<img src="${tweet.media}" class="tweet-image" alt="صورة التغريدة">` : ''}
+                        ${tweet.media && tweet.mediaType === 'video' ? `<video src="${tweet.media}" class="tweet-image" controls alt="فيديو التغريدة"></video>` : ''}
+                        <div class="tweet-actions">
+                            <div class="action-btn">
+                                <i class="fas fa-heart ${tweet.likedBy && tweet.likedBy[userId] ? 'liked' : ''}"></i>
+                                <span>${tweet.likes || 0}</span>
+                            </div>
+                            <div class="action-btn delete-btn" onclick="deleteTweet('${tweet.id}', '${tweet.media || ''}')">
+                                <i class="fas fa-trash"></i>
+                            </div>
+                        </div>
+                        <span class="tweet-time">${timeAgo(tweet.time instanceof firebase.firestore.Timestamp ? tweet.time.toMillis() : tweet.time)}</span>
+                    </div>`).join('')
+                : '<div class="no-items">لا توجد تغريدات بعد</div>';
+        }
+
+        async function deleteTweet(tweetId, mediaUrl) {
+            const tweetRef = db.collection('tweets').doc(tweetId);
+            try {
+                if (mediaUrl) {
+                    const mediaRef = storage.refFromURL(mediaUrl);
+                    await mediaRef.delete().catch(error => {
+                        console.error(`خطأ في حذف الوسائط ${mediaUrl}:`, error);
+                    });
+                }
+
+                await tweetRef.delete();
+                console.log("تم حذف التغريدة بنجاح:", tweetId);
+                showCustomAlert('تم حذف التغريدة بنجاح!', 'success');
+                loadUserTweets(firebase.auth().currentUser.uid);
+            } catch (error) {
+                console.error("خطأ في حذف التغريدة:", error);
+                showCustomAlert('خطأ في حذف التغريدة: ' + error.message, 'error');
+            }
+        }
+
+        function loadLikedTweets(userId) {
+            db.collection('tweets').where(`likedBy.${userId}`, '==', true).get()
+                .then((snapshot) => {
+                    likedTweets = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    renderLikedTweets(userId);
+                })
+                .catch((error) => {
+                    console.error("خطأ في جلب التغريدات المعجب بها:", error);
+                    showCustomAlert('خطأ في جلب التغريدات المعجب بها: ' + error.message, 'error');
+                });
+        }
+
+        function renderLikedTweets(userId) {
+            const likedTweetsList = document.getElementById('likedTweets');
+            likedTweetsList.innerHTML = likedTweets.length > 0 
+                ? likedTweets.map(tweet => `
+                    <div class="tweet">
+                        <div class="tweet-content">${formatText(tweet.content)}</div>
+                        ${tweet.media && tweet.mediaType === 'image' ? `<img src="${tweet.media}" class="tweet-image" alt="صورة التغريدة">` : ''}
+                        ${tweet.media && tweet.mediaType === 'video' ? `<video src="${tweet.media}" class="tweet-image" controls alt="فيديو التغريدة"></video>` : ''}
+                        <div class="tweet-actions">
+                            <div class="action-btn">
+                                <i class="fas fa-heart ${tweet.likedBy && tweet.likedBy[userId] ? 'liked' : ''}"></i>
+                                <span>${tweet.likes || 0}</span>
+                            </div>
+                            <div class="action-btn delete-btn" onclick="unlikeTweet('${tweet.id}', '${userId}')">
+                                <i class="fas fa-heart-broken"></i> إلغاء الإعجاب
+                            </div>
+                        </div>
+                        <span class="tweet-time">${timeAgo(tweet.time instanceof firebase.firestore.Timestamp ? tweet.time.toMillis() : tweet.time)}</span>
+                    </div>`).join('')
+                : '<div class="no-items">لم تعجب بأي تغريدات بعد!</div>';
+        }
+
+        async function unlikeTweet(tweetId, userId) {
+            const tweetRef = db.collection('tweets').doc(tweetId);
+            try {
+                await db.runTransaction(async (transaction) => {
+                    const tweetDoc = await transaction.get(tweetRef);
+                    if (!tweetDoc.exists) return;
+
+                    const tweet = tweetDoc.data();
+                    const likedBy = tweet.likedBy || {};
+                    if (likedBy[userId]) {
+                        transaction.update(tweetRef, {
+                            likes: (tweet.likes || 0) - 1,
+                            [`likedBy.${userId}`]: firebase.firestore.FieldValue.delete()
+                        });
+                    }
+                });
+                console.log("تم إلغاء الإعجاب بنجاح:", tweetId);
+                showCustomAlert('تم إلغاء الإعجاب بنجاح!', 'success');
+                loadLikedTweets(userId);
+            } catch (error) {
+                console.error("خطأ في إلغاء الإعجاب:", error);
+                showCustomAlert('خطأ في إلغاء الإعجاب: ' + error.message, 'error');
+            }
+        }
+
+        function loadUserComments(userId) {
+            db.collection('tweets').get()
+                .then((snapshot) => {
+                    userComments = [];
+                    snapshot.forEach(doc => {
+                        const tweet = doc.data();
+                        if (tweet.comments) {
+                            Object.entries(tweet.comments).forEach(([commentId, comment]) => {
+                                if (comment.userId === userId) {
+                                    userComments.push({ tweetId: doc.id, commentId, ...comment });
+                                }
+                            });
+                        }
+                    });
+                    renderUserComments(userId);
+                })
+                .catch((error) => {
+                    console.error("خطأ في جلب التعليقات:", error);
+                    showCustomAlert('خطأ في جلب التعليقات: ' + error.message, 'error');
+                });
+        }
+
+        function renderUserComments(userId) {
+            const commentsList = document.getElementById('comments');
+            commentsList.innerHTML = userComments.length > 0 
+                ? userComments.map(comment => `
+                    <div class="comment-entry">
+                        <div class="comment-text">${formatText(comment.text)}</div>
+                        <div class="tweet-actions">
+                            <div class="action-btn delete-btn" onclick="deleteComment('${comment.tweetId}', '${comment.commentId}')">
+                                <i class="fas fa-trash"></i> حذف التعليق
+                            </div>
+                        </div>
+                        <span class="tweet-time">${timeAgo(comment.time instanceof firebase.firestore.Timestamp ? comment.time.toMillis() : comment.time)}</span>
+                    </div>`).join('')
+                : '<div class="no-items">لا توجد تعليقات كتبتها بعد!</div>';
+        }
+
+        async function deleteComment(tweetId, commentId) {
+            const tweetRef = db.collection('tweets').doc(tweetId);
+            try {
+                await tweetRef.update({
+                    [`comments.${commentId}`]: firebase.firestore.FieldValue.delete()
+                });
+                console.log("تم حذف التعليق بنجاح:", commentId);
+                showCustomAlert('تم حذف التعليق بنجاح!', 'success');
+                loadUserComments(firebase.auth().currentUser.uid);
+            } catch (error) {
+                console.error("خطأ في حذف التعليق:", error);
+                showCustomAlert('خطأ في حذف التعليق: ' + error.message, 'error');
+            }
+        }
+
+        function formatText(text) {
+            return text
+                .replace(/#(\w+)/g, '<span style="color: var(--primary);">#$1</span>')
+                .replace(/@(\w+)/g, '<span style="color: var(--primary);">@$1</span>');
+        }
+
+        function timeAgo(timestamp) {
+            const now = Date.now();
+            const diff = now - timestamp;
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+
+            if (minutes < 60) return `منذ ${minutes} دقيقة`;
+            if (hours < 24) return `منذ ${hours} ساعة`;
+            return `منذ ${days} يوم`;
+        }
+
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`.tab-btn[onclick="showTab('${tabId}')"]`).classList.add('active');
+        }
+    </script>
+</body>
+</html>

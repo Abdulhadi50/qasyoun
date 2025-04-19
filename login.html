@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول أو إنشاء حساب</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+    :root {
+        --primary: #00CC99;
+        --secondary: #e9ecef;
+        --text: #212529;
+        --muted: #6c757d;
+        --background: #ffffff;
+        --card-bg: #ffffff;
+        --success: #01B276;
+        --error: #FE2B54;
+        --hover: #00CC99;
+        --border: #ced4da;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Rubik', sans-serif;
+    }
+
+    body {
+        background: var(--background);
+        color: var(--text);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        overflow: hidden;
+    }
+
+    .auth-container {
+        background: var(--card-bg);
+        width: 450px;
+        padding: 40px;
+        border-radius: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .tab-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 30px;
+        border-bottom: 2px solid var(--secondary);
+    }
+
+    .tab-btn {
+        flex: 1;
+        padding: 15px 0;
+        background: none;
+        border: none;
+        color: var(--muted);
+        font-size: 1.2em;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        position: relative;
+        text-align: center;
+    }
+
+    .tab-btn.active {
+        color: var(--primary);
+    }
+
+    .tab-btn.active::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: var(--primary);
+    }
+
+    .tab-content {
+        display: none;
+    }
+
+    .tab-content.active {
+        display: block;
+        animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .avatar-upload {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .avatar-preview {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: var(--secondary);
+        border: 3px solid var(--primary);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+    .avatar-preview:hover {
+        transform: scale(1.05);
+        border-color: var(--hover);
+    }
+
+    .avatar-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    .avatar-preview i {
+        font-size: 2em;
+        color: var(--muted);
+    }
+
+    .avatar-label {
+        margin-top: 10px;
+        font-size: 0.9em;
+        color: var(--muted);
+    }
+
+    input[type="file"] {
+        display: none;
+    }
+
+    .input-group {
+        position: relative;
+        margin-bottom: 25px;
+    }
+
+    .input-group input,
+    .input-group .country-select-btn {
+        width: 100%;
+        padding: 14px 16px;
+        border: none;
+        border-radius: 12px;
+        background: var(--secondary);
+        color: var(--text);
+        font-size: 1em;
+        transition: all 0.3s ease;
+    }
+
+    .input-group input:focus,
+    .input-group .country-select-btn:focus {
+        background: var(--secondary);
+        outline: 1px solid rgba(0, 0, 0, 1);
+    }
+
+    .input-group label {
+        position: absolute;
+        top: 50%;
+        right: 16px;
+        transform: translateY(-50%);
+        color: var(--muted);
+        font-size: 0.9em;
+        pointer-events: none;
+        transition: all 0.3s ease;
+    }
+
+    .input-group input:focus + label,
+    .input-group input:not(:placeholder-shown) + label,
+    .input-group .country-select-btn.active + label {
+        top: -10px;
+        right: 12px;
+        font-size: 0.8em;
+        color: var(--primary);
+        background: var(--card-bg);
+        padding: 0 6px;
+        border-radius: 4px;
+    }
+
+    .input-group.input-with-prefix input {
+        padding-right: 40px;
+    }
+
+    .input-group.input-with-prefix::before {
+        content: '@';
+        position: absolute;
+        right: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted);
+        font-size: 1em;
+    }
+
+    /* Country Popup Styles - Centered Modal */
+    .country-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 2000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .country-modal-content {
+        background: var(--card-bg);
+        width: 350px;
+        max-height: 80vh;
+        padding: 20px;
+        border-radius: 15px;
+        position: relative;
+        overflow-y: auto;
+    }
+
+    .country-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .country-modal-header h3 {
+        font-size: 1.3em;
+        color: var(--primary);
+    }
+
+    .close-country-btn {
+        background: none;
+        border: none;
+        color: var(--muted);
+        font-size: 1.5em;
+        transition: color 0.3s ease;
+    }
+
+    .close-country-btn:hover {
+        color: var(--primary);
+    }
+
+    .country-search {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 1em;
+    }
+
+    .country-item {
+        padding: 10px 16px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .country-item:hover {
+        background: var(--secondary);
+    }
+
+    .country-item img {
+        width: 24px;
+        height: 24px;
+        margin-left: 10px;
+    }
+
+    .country-item span {
+        font-size: 1em;
+        color: var(--text);
+    }
+
+    button {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(to right, var(--primary), var(--hover));
+        color: white;
+        border: none;
+        border-radius: 20px;
+        font-size: 1.1em;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    button.loading::after {
+        content: '';
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        border: 2px solid #fff;
+        border-top: 2px solid transparent;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    @keyframes spin {
+        0% { transform: translateY(-50%) rotate(0deg); }
+        100% { transform: translateY(-50%) rotate(360deg); }
+    }
+
+    button.loading {
+        pointer-events: none;
+        opacity: 0.7;
+    }
+
+    .forgot-password {
+        text-align: center;
+        margin-top: 15px;
+        font-size: 0.9em;
+    }
+
+    .forgot-password a {
+        color: var(--primary);
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .forgot-password a:hover {
+        color: var(--hover);
+        text-decoration: underline;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 2000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content {
+        background: var(--card-bg);
+        max-width: 400px;
+        width: 90%;
+        padding: 30px;
+        border-radius: 15px;
+        position: relative;
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .modal-header h3 {
+        font-size: 1.5em;
+        color: var(--primary);
+        font-weight: 500;
+    }
+
+    .close-btn {
+        background: none;
+        border: none;
+        color: var(--muted);
+        font-size: 1.5em;
+        transition: color 0.3s ease;
+    }
+
+    .close-btn:hover {
+        color: var(--primary);
+    }
+
+    .custom-alert {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--card-bg);
+        padding: 20px;
+        border-radius: 12px;
+        z-index: 2000;
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        opacity: 0;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .custom-alert.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+
+    .custom-alert.success {
+        border-left: 4px solid var(--success);
+    }
+
+    .custom-alert.error {
+        border-left: 4px solid var(--error);
+    }
+
+    .custom-alert p {
+        margin: 0;
+        font-size: 1em;
+        color: var(--text);
+    }
+
+    .custom-alert button {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        margin-top: 15px;
+        transition: background 0.3s;
+    }
+
+    .custom-alert button:hover {
+        background: var(--hover);
+    }
+</style>
+    <script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-storage.js"></script>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="tab-header">
+            <button class="tab-btn active" data-tab="login">تسجيل الدخول</button>
+            <button class="tab-btn" data-tab="signup">إنشاء حساب</button>
+        </div>
+        <div class="tab-content active" id="login">
+            <div class="input-group">
+                <input type="email" id="loginEmail" placeholder=" " required>
+                <label>البريد الإلكتروني</label>
+            </div>
+            <div class="input-group">
+                <input type="password" id="loginPassword" placeholder=" " required>
+                <label>كلمة المرور</label>
+            </div>
+            <button id="loginBtn" onclick="login()">تسجيل الدخول</button>
+            <div class="forgot-password">
+                <a href="#" onclick="openResetPasswordModal()">نسيت كلمة السر؟</a>
+            </div>
+        </div>
+        <div class="tab-content" id="signup">
+            <div class="avatar-upload">
+                <label for="signupAvatar" class="avatar-preview" id="avatarPreview">
+                    <i class="fas fa-camera"></i>
+                </label>
+                <input type="file" id="signupAvatar" accept="image/*" required>
+                <span class="avatar-label">صورة الملف الشخصي</span>
+            </div>
+            <div class="input-group">
+                <input type="text" id="signupName" placeholder=" " required>
+                <label>اسم المستخدم</label>
+            </div>
+            <div class="input-group input-with-prefix">
+                <input type="text" id="signupHandle" placeholder=" " required>
+                <label>معرف المستخدم</label>
+            </div>
+            <div class="input-group">
+                <input type="email" id="signupEmail" placeholder=" " required>
+                <label>البريد الإلكتروني</label>
+            </div>
+            <div class="input-group">
+                <input type="password" id="signupPassword" placeholder=" " required>
+                <label>كلمة المرور</label>
+            </div>
+            <div class="input-group">
+                <button type="button" class="country-select-btn" id="countrySelectBtn">اختر الدولة</button>
+                <label>الدولة</label>
+            </div>
+            <button id="signupBtn" onclick="signup()">إنشاء الحساب</button>
+        </div>
+    </div>
+
+    <div class="country-modal" id="countryModal">
+        <div class="country-modal-content">
+            <div class="country-modal-header">
+                <h3>اختر الدولة</h3>
+                <button class="close-country-btn" id="closeCountryModal"><i class="fas fa-times"></i></button>
+            </div>
+            <input type="text" class="country-search" id="countrySearch" placeholder="ابحث عن الدولة...">
+            <div id="countryList">
+                <div class="country-item" data-country="سوريا">
+    <img src="https://up6.cc/2025/03/174197678011091.png" alt="علم سوريا">
+    <span>الجمهورية العربية السورية</span>
+</div>
+<div class="country-item" data-country="السعودية">
+  <img src="https://img.icons8.com/color/999/saudi-arabia.png" alt="علم السعودية">
+  <span>المملكة العربية السعودية</span>
+</div>
+<div class="country-item" data-country="قطر">
+    <img src="https://img.icons8.com/color/999/qatar.png" alt="علم قطر">
+    <span>دولة قطر</span>
+</div>
+<div class="country-item" data-country="فلسطين">
+    <img src="https://img.icons8.com/color/999/palestine.png" alt="علم فلسطين">
+    <span>دولة فلسطين</span>
+</div>
+<div class="country-item" data-country="مصر">
+    <img src="https://img.icons8.com/color/999/egypt.png" alt="علم مصر">
+    <span>مصر</span>
+</div>
+<div class="country-item" data-country="لبنان">
+    <img src="https://img.icons8.com/color/999/lebanon.png" alt="علم لبنان">
+    <span>لبنان</span>
+</div>
+<div class="country-item" data-country="الأردن">
+    <img src="https://img.icons8.com/color/999/jordan.png" alt="علم الأردن">
+    <span>الأردن</span>
+</div>
+<div class="country-item" data-country="الجزائر">
+    <img src="https://img.icons8.com/color/999/algeria.png" alt="علم الجزائر">
+    <span>الجزائر</span>
+</div>
+<div class="country-item" data-country="تونس">
+    <img src="https://img.icons8.com/color/999/tunisia.png" alt="علم تونس">
+    <span>تونس</span>
+</div>
+<div class="country-item" data-country="ليبيا">
+    <img src="https://img.icons8.com/color/999/libya.png" alt="علم ليبيا">
+    <span>ليبيا</span>
+</div>
+<div class="country-item" data-country="المغرب">
+    <img src="https://img.icons8.com/color/999/morocco.png" alt="علم المغرب">
+    <span>المغرب</span>
+</div>
+<div class="country-item" data-country="موريتانيا">
+    <img src="https://img.icons8.com/color/999/mauritania.png" alt="علم موريتانيا">
+    <span>موريتانيا</span>
+</div>
+<div class="country-item" data-country="السودان">
+    <img src="https://img.icons8.com/color/999/sudan.png" alt="علم السودان">
+    <span>السودان</span>
+</div>
+<div class="country-item" data-country="جنوب السودان">
+    <img src="https://img.icons8.com/color/999/south-sudan.png" alt="علم جنوب السودان">
+    <span>جنوب السودان</span>
+</div>
+<div class="country-item" data-country="الصومال">
+    <img src="https://img.icons8.com/color/999/somalia.png" alt="علم الصومال">
+    <span>الصومال</span>
+</div>
+<div class="country-item" data-country="جزر القمر">
+    <img src="https://img.icons8.com/color/999/comoros.png" alt="علم جزر القمر">
+    <span>جزر القمر</span>
+</div>
+<div class="country-item" data-country="الإمارات">
+    <img src="https://img.icons8.com/color/999/united-arab-emirates.png" alt="علم الإمارات">
+    <span>الإمارات</span>
+</div>
+<div class="country-item" data-country="البحرين">
+    <img src="https://img.icons8.com/color/999/bahrain.png" alt="علم البحرين">
+    <span>البحرين</span>
+</div>
+<div class="country-item" data-country="الكويت">
+    <img src="https://img.icons8.com/color/999/kuwait.png" alt="علم الكويت">
+    <span>الكويت</span>
+</div>
+<div class="country-item" data-country="عمان">
+    <img src="https://img.icons8.com/color/999/oman.png" alt="علم عمان">
+    <span>عمان</span>
+</div>
+<div class="country-item" data-country="اليمن">
+    <img src="https://img.icons8.com/color/999/yemen.png" alt="علم اليمن">
+    <span>اليمن</span>
+</div>
+<div class="country-item" data-country="العراق">
+  <img src="https://img.icons8.com/color/999/lgbt-flag.png" alt="علم العراق">
+  <span>العراق</span>
+</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="resetPasswordModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>إعادة تعيين كلمة المرور</h3>
+                <button class="close-btn" onclick="closeResetPasswordModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="input-group">
+                <input type="email" id="resetEmail" placeholder=" " required>
+                <label>البريد الإلكتروني</label>
+            </div>
+            <button onclick="sendPasswordResetEmail()">إرسال رابط الإعادة</button>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4aW-Mr469PsIYT8n3jL--GbtRU5OTWdo",
+            authDomain: "smart-pay-6a9b8.firebaseapp.com",
+            projectId: "smart-pay-6a9b8",
+            storageBucket: "smart-pay-6a9b8.appspot.com",
+            messagingSenderId: "9418007073",
+            appId: "1:9418007073:web:72e0144eb56524fc263960"
+        };
+
+        try {
+            firebase.initializeApp(firebaseConfig);
+            console.log("Firebase تم تهيئته بنجاح");
+        } catch (error) {
+            console.error("خطأ في تهيئة Firebase:", error);
+            showCustomAlert("حدث خطأ أثناء تهيئة التطبيق: " + error.message, 'error');
+        }
+
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        function showCustomAlert(message, type = 'success') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `custom-alert ${type}`;
+            alertDiv.innerHTML = `
+                <p>${message}</p>
+                <button onclick="this.parentElement.remove()">حسنًا</button>
+            `;
+            document.body.appendChild(alertDiv);
+            setTimeout(() => alertDiv.classList.add('show'), 10);
+            setTimeout(() => alertDiv.remove(), 5000);
+        }
+
+        function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const loginBtn = document.getElementById('loginBtn');
+
+            if (!email || !password) {
+                showCustomAlert('يرجى ملء جميع الحقول', 'error');
+                return;
+            }
+
+            loginBtn.classList.add('loading');
+            auth.signInWithEmailAndPassword(email, password)
+                .then(() => {
+                    showCustomAlert('تم تسجيل الدخول بنجاح!', 'success');
+                    window.location.href = 'home.html';
+                })
+                .catch((error) => {
+                    console.error("خطأ في تسجيل الدخول:", error);
+                    showCustomAlert('خطأ في تسجيل الدخول: ' + error.message, 'error');
+                })
+                .finally(() => {
+                    loginBtn.classList.remove('loading');
+                });
+        }
+
+        async function signup() {
+  const name = document.getElementById('signupName').value;
+  const handleInput = document.getElementById('signupHandle').value;
+  const handle = '@' + handleInput;
+  const email = document.getElementById('signupEmail').value;
+  const password = document.getElementById('signupPassword').value;
+  const avatarFile = document.getElementById('signupAvatar').files[0];
+  const country = document.getElementById('countrySelectBtn').dataset.selectedCountry;
+  const signupBtn = document.getElementById('signupBtn');
+  
+  // التحقق من ملء جميع الحقول
+  if (!name || !handleInput || !email || !password || !avatarFile || !country) {
+    showCustomAlert('يرجى ملء جميع الحقول المطلوبة بما في ذلك الصورة الشخصية والدولة', 'error');
+    return;
+  }
+  
+  // التحقق من حجم الصورة (الحد الأقصى 3 ميجابايت)
+  const maxSizeInBytes = 3 * 1024 * 1024; // 3MB
+  if (avatarFile.size > maxSizeInBytes) {
+    showCustomAlert('حجم الصورة يجب أن يكون أقل من 3 ميجابايت', 'error');
+    return;
+  }
+  
+  // التحقق من معرف المستخدم
+  const handleRegex = /^(?=.*[A-Za-z])[A-Za-z0-9_]{4,}$/;
+  if (!handleRegex.test(handleInput)) {
+    showCustomAlert('معرف المستخدم يجب أن يكون أكثر من 4 أحرف، يحتوي على أحرف إنجليزية على الأقل، ويمكن أن يحتوي على أرقام أو شرطة سفلية (_) بدون مسافات، ولا يمكن أن يكون أرقامًا فقط', 'error');
+    return;
+  }
+  
+  // التحقق من كلمة المرور
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+  if (!passwordRegex.test(password)) {
+    showCustomAlert('كلمة المرور يجب أن تحتوي على 6 أحرف على الأقل، بما في ذلك حرف ورقم', 'error');
+    return;
+  }
+  
+  signupBtn.classList.add('loading');
+  try {
+    // التحقق مما إذا كان البريد الإلكتروني مستخدمًا
+    const signInMethods = await auth.fetchSignInMethodsForEmail(email);
+    if (signInMethods.length > 0) {
+      showCustomAlert('البريد الإلكتروني مستخدم بالفعل، استخدم بريدًا آخر', 'error');
+      return;
+    }
+    
+    // التحقق مما إذا كان معرف المستخدم مستخدمًا
+    const handleSnapshot = await db.collection('users').where('handle', '==', handle).get();
+    if (!handleSnapshot.empty) {
+      showCustomAlert('معرف المستخدم مستخدم بالفعل، اختر معرفًا آخر', 'error');
+      return;
+    }
+    
+    // إنشاء حساب المستخدم
+    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+    const user = userCredential.user;
+    console.log("تم إنشاء المستخدم بنجاح:", user.uid);
+    
+    // رفع الصورة إلى Firebase Storage
+    const storageRef = storage.ref();
+    const avatarRef = storageRef.child(`avatars/${user.uid}`);
+    console.log("يتم رفع الصورة...");
+    await avatarRef.put(avatarFile);
+    const avatarUrl = await avatarRef.getDownloadURL();
+    console.log("تم رفع الصورة بنجاح، URL:", avatarUrl);
+    
+    // تحديث ملف المستخدم
+    await user.updateProfile({
+      displayName: name,
+      photoURL: avatarUrl
+    });
+    console.log("تم تحديث ملف المستخدم في Auth");
+    
+    // حفظ بيانات المستخدم في Firestore
+    await db.collection('users').doc(user.uid).set({
+      name: name,
+      handle: handle,
+      email: email,
+      country: country,
+      avatar: avatarUrl,
+      uniqueId: generateUniqueId(),
+      referralCode: generateReferralCode(),
+      balance: 0,
+      verified: false,
+      followers: 0,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    console.log("تم حفظ بيانات المستخدم في Firestore");
+    
+    showCustomAlert('تم إنشاء الحساب بنجاح!', 'success');
+    window.location.href = 'home.html';
+  } catch (error) {
+    console.error("خطأ في إنشاء الحساب:", error);
+    showCustomAlert('خطأ في إنشاء الحساب: ' + error.message, 'error');
+  } finally {
+    signupBtn.classList.remove('loading');
+  }
+}
+
+        function generateUniqueId() {
+            let uniqueId = '60';
+            for (let i = 0; i < 5; i++) {
+                uniqueId += Math.floor(Math.random() * 10);
+            }
+            return uniqueId;
+        }
+
+        function generateReferralCode() {
+            let code = '';
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            for (let i = 0; i < 7; i++) {
+                code += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return code;
+        }
+
+        // التحكم في تبديل علامات التبويب
+        document.querySelectorAll('.tab-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                document.getElementById(button.dataset.tab).classList.add('active');
+            });
+        });
+
+        // معاينة الصورة الشخصية
+        document.getElementById('signupAvatar').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    const preview = document.getElementById('avatarPreview');
+                    preview.innerHTML = `<img src="${reader.result}" alt="معاينة الصورة">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // التحكم في نافذة اختيار الدولة
+        const countrySelectBtn = document.getElementById('countrySelectBtn');
+        const countryModal = document.getElementById('countryModal');
+        const closeCountryModal = document.getElementById('closeCountryModal');
+        const countrySearch = document.getElementById('countrySearch');
+        const countryItems = document.querySelectorAll('.country-item');
+
+        countrySelectBtn.addEventListener('click', () => {
+            countryModal.style.display = 'flex';
+            countrySearch.value = ''; // إعادة تعيين حقل البحث
+            filterCountries(''); // عرض جميع الدول عند الفتح
+        });
+
+        closeCountryModal.addEventListener('click', () => {
+            countryModal.style.display = 'none';
+        });
+
+        countryItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const country = item.dataset.country;
+                countrySelectBtn.textContent = country;
+                countrySelectBtn.dataset.selectedCountry = country;
+                countrySelectBtn.classList.add('active');
+                countryModal.style.display = 'none';
+            });
+        });
+
+        // البحث في الدول
+        countrySearch.addEventListener('input', () => {
+            const searchValue = countrySearch.value.trim();
+            filterCountries(searchValue);
+        });
+
+        function filterCountries(searchTerm) {
+            countryItems.forEach(item => {
+                const countryName = item.dataset.country;
+                if (countryName.includes(searchTerm)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // إغلاق النافذة عند النقر خارجها
+        countryModal.addEventListener('click', (e) => {
+            if (e.target === countryModal) {
+                countryModal.style.display = 'none';
+            }
+        });
+
+        // إعادة تعيين كلمة المرور
+        function openResetPasswordModal() {
+            document.getElementById('resetPasswordModal').style.display = 'flex';
+            document.getElementById('resetEmail').value = document.getElementById('loginEmail').value || '';
+        }
+
+        function closeResetPasswordModal() {
+            document.getElementById('resetPasswordModal').style.display = 'none';
+            document.getElementById('resetEmail').value = '';
+        }
+
+        function sendPasswordResetEmail() {
+            const email = document.getElementById('resetEmail').value;
+            if (!email) {
+                showCustomAlert('يرجى إدخال البريد الإلكتروني', 'error');
+                return;
+            }
+
+            auth.sendPasswordResetEmail(email)
+                .then(() => {
+                    showCustomAlert('تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني!', 'success');
+                    closeResetPasswordModal();
+                })
+                .catch((error) => {
+                    console.error("خطأ في إرسال البريد:", error);
+                    showCustomAlert('خطأ في إرسال الرابط: ' + error.message, 'error');
+                });
+        }
+    </script>
+</body>
+</html>
