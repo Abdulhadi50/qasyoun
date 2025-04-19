@@ -1245,7 +1245,7 @@ async function renderSingleTweet(tweet, userId, feed, prepend = false, isPinned 
             <img src="${tweet.avatar || 'https://via.placeholder.com/50'}" class="user-avatar" alt="صورة المستخدم" onclick="${tweet.userId === firebase.auth().currentUser?.uid ? 'openCurrentUserProfile()' : `openProfileSection('${tweet.userId}')`}">
             <div class="user-details">
                 <div class="user-name" onclick="${tweet.userId === firebase.auth().currentUser?.uid ? 'openCurrentUserProfile()' : `openProfileSection('${tweet.userId}')`}">${tweet.name || 'مستخدم'}
-                    ${isVerified ? `<img src="https://img.icons8.com/color/999/tiktok-verified-account.png" class="verified-icon" alt="موثق">` : ''}
+                    ${isVerified ? `<img src="https://firebasestorage.googleapis.com/v0/b/smart-pay-6a9b8.appspot.com/o/%D9%A2%D9%A0%D9%A2%D9%A5%D9%A0%D9%A2%D9%A2%D9%A6_%D9%A1%D9%A6%D9%A0%D9%A5%D9%A5%D9%A6.png?alt=media&token=e0134418-e89c-46fd-a822-e34ebe285ad2" class="verified-icon" alt="موثق">` : ''}
                 </div>
                 <div class="user-handle">${tweet.handle || '@user'}</div>
             </div>
@@ -1312,7 +1312,7 @@ async function updateTweet(tweetId, userId) {
                 <img src="${tweet.avatar || 'https://via.placeholder.com/50'}" class="user-avatar" alt="صورة المستخدم" onclick="${tweet.userId === firebase.auth().currentUser?.uid ? 'openCurrentUserProfile()' : `openProfileSection('${tweet.userId}')`}">
                 <div class="user-details">
                     <div class="user-name" onclick="${tweet.userId === firebase.auth().currentUser?.uid ? 'openCurrentUserProfile()' : `openProfileSection('${tweet.userId}')`}">${tweet.name || 'مستخدم'}
-                        ${isVerified ? `<img src="https://img.icons8.com/color/999/tiktok-verified-account.png" class="verified-icon" alt="موثق">` : ''}
+                        ${isVerified ? `<img src="https://firebasestorage.googleapis.com/v0/b/smart-pay-6a9b8.appspot.com/o/%D9%A2%D9%A0%D9%A2%D9%A5%D9%A0%D9%A2%D9%A2%D9%A6_%D9%A1%D9%A6%D9%A0%D9%A5%D9%A5%D9%A6.png?alt=media&token=e0134418-e89c-46fd-a822-e34ebe285ad2" class="verified-icon" alt="موثق">` : ''}
                     </div>
                     <div class="user-handle">${tweet.handle || '@user'}</div>
                 </div>
@@ -1507,7 +1507,7 @@ function openCommentsPanel(tweetId) {
                         <div class="comment-entry-name">
                             <span onclick="${comment.userId === firebase.auth().currentUser?.uid ? 'openCurrentUserProfile()' : `openProfileSection('${comment.userId}')`}">${comment.userName || 'مستخدم'}</span>
                             ${isCreator ? '<span style="color: #00BCD4; font-size: 0.8em; margin-right: 5px;">الناشر</span>' : ''}
-                            ${commentVerified ? `<img src="https://img.icons8.com/color/999/tiktok-verified-account.png" class="verified-icon" alt="موثق">` : ''}
+                            ${commentVerified ? `<img src="https://firebasestorage.googleapis.com/v0/b/smart-pay-6a9b8.appspot.com/o/%D9%A2%D9%A0%D9%A2%D9%A5%D9%A0%D9%A2%D9%A2%D9%A6_%D9%A1%D9%A6%D9%A0%D9%A5%D9%A5%D9%A6.png?alt=media&token=e0134418-e89c-46fd-a822-e34ebe285ad2" class="verified-icon" alt="موثق">` : ''}
                             <span class="comment-entry-time">${commentTime}</span>
                         </div>
                         <div class="comment-entry-text${needsToggle ? '' : ' expanded'}">${parsedComment}</div>
@@ -1578,7 +1578,7 @@ async function postComment() {
                 <div class="comment-entry-content">
                     <div class="comment-entry-name">
                         <span onclick="openProfileSection('${newComment.userId}')">${newComment.userName}</span>
-                        ${newComment.verified ? `<img src="https://img.icons8.com/color/999/tiktok-verified-account.png" class="verified-icon" alt="موثق">` : ''}
+                        ${newComment.verified ? `<img src="https://firebasestorage.googleapis.com/v0/b/smart-pay-6a9b8.appspot.com/o/%D9%A2%D9%A0%D9%A2%D9%A5%D9%A0%D9%A2%D9%A2%D9%A6_%D9%A1%D9%A6%D9%A0%D9%A5%D9%A5%D9%A6.png?alt=media&token=e0134418-e89c-46fd-a822-e34ebe285ad2" class="verified-icon" alt="موثق">` : ''}
                         <span class="comment-entry-time">الآن</span>
                     </div>
                     <div class="comment-entry-text${needsToggle ? '' : ' expanded'}">${parsedComment}</div>
@@ -2004,7 +2004,7 @@ async function openProfileSection(userId) {
     <div class="profile-container">
         <img src="${userData.avatar || 'https://via.placeholder.com/100'}" class="profile-avatar" alt="صورة المستخدم" onclick="openProfileImageModal('${userData.avatar || 'https://via.placeholder.com/100'}')">
         <div class="profile-name">${userData.name || 'مستخدم'}
-            ${userData.verified ? `<img src="https://img.icons8.com/color/999/tiktok-verified-account.png" class="verified-icon" alt="موثق">` : ''}
+            ${userData.verified ? `<img src="https://firebasestorage.googleapis.com/v0/b/smart-pay-6a9b8.appspot.com/o/%D9%A2%D9%A0%D9%A2%D9%A5%D9%A0%D9%A2%D9%A2%D9%A6_%D9%A1%D9%A6%D9%A0%D9%A5%D9%A5%D9%A6.png?alt=media&token=e0134418-e89c-46fd-a822-e34ebe285ad2" class="verified-icon" alt="موثق">` : ''}
         </div>
         <div class="profile-handle">${userData.handle || '@user'}</div>
         <div class="profile-stats">
@@ -2055,7 +2055,7 @@ async function openProfileSection(userId) {
                     <img src="${tweet.avatar || 'https://via.placeholder.com/50'}" class="user-avatar" alt="صورة المستخدم" onclick="${tweet.userId === firebase.auth().currentUser?.uid ? 'openCurrentUserProfile()' : `openProfileSection('${tweet.userId}')`}">
                     <div class="user-details">
                         <div class="user-name" onclick="${tweet.userId === firebase.auth().currentUser?.uid ? 'openCurrentUserProfile()' : `openProfileSection('${tweet.userId}')`}">${tweet.name || 'مستخدم'}
-                            ${userData.verified ? `<img src="https://img.icons8.com/color/999/tiktok-verified-account.png" class="verified-icon" alt="موثق">` : ''}
+                            ${userData.verified ? `<img src="https://firebasestorage.googleapis.com/v0/b/smart-pay-6a9b8.appspot.com/o/%D9%A2%D9%A0%D9%A2%D9%A5%D9%A0%D9%A2%D9%A2%D9%A6_%D9%A1%D9%A6%D9%A0%D9%A5%D9%A5%D9%A6.png?alt=media&token=e0134418-e89c-46fd-a822-e34ebe285ad2" class="verified-icon" alt="موثق">` : ''}
                         </div>
                         <div class="user-handle">${tweet.handle || '@user'}</div>
                     </div>
