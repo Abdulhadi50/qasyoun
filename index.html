@@ -130,9 +130,9 @@
     }
 
     .tweet.pinned {
-        border: 2px solid var(--primary);
-        background: #f8f9fa;
-    }
+    border: 1px solid #313CA8;
+    background: #f8f9fa;
+}
 
     .pinned-label {
         color: var(--primary);
@@ -1064,14 +1064,30 @@ function parseContent(content = '') {
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
     
-    const urlPattern = /(https?:\/\/[^\s]+)/g;
-    let parsedContent = safeContent.replace(urlPattern, '<a href="$1" target="_blank" style="color: var(--primary); text-decoration: underline;">$1</a>');
+    let parsedContent = safeContent;
     
+    // معالجة الروابط
+    const urlPattern = /(https?:\/\/[^\s]+)/g;
+    parsedContent = parsedContent.replace(urlPattern, '<a href="$1" target="_blank" style="color: var(--primary); text-decoration: underline;">$1</a>');
+    
+    // معالجة الهاشتاغ
     const hashtagPattern = /#([\u0600-\u06FF\u0750-\u077F\u08A0-\u08FFa-zA-Z0-9_]+)/g;
     parsedContent = parsedContent.replace(hashtagPattern, '<span style="color: var(--primary);">#$1</span>');
     
-    const shortcutPattern = /\[بحبك\]/g;
-    parsedContent = parsedContent.replace(shortcutPattern, '<span style="color: #00BCD4;">بحبك</span>');
+    // معالجة الكلمات المخصصة
+    const shortcuts = [
+        { pattern: /\[بحبك\]/g, replacement: '<span style="color: #2196F3; font-weight: bold;">بحبك</span>' },
+        { pattern: /\[الله\]/g, replacement: '<span style="color: #C3A159; font-weight: bold;">اللّٰه ﷻ </span>' },
+        { pattern: /\[السعودية\]/g, replacement: '<span style="color: #367C57; font-weight: bold;">المملكة العربية السعودية</span>' },
+        
+        { pattern: /\[محمد\]/g, replacement: '<span style="color: #795548; font-weight: bold;">النبي محمد ﷺ</span>' },
+        
+        { pattern: /\[سوريا\]/g, replacement: '<span style="color: #48A574; font-weight: bold;">الجمهورية العربية السورية</span>' }
+    ];
+    
+    shortcuts.forEach(({ pattern, replacement }) => {
+        parsedContent = parsedContent.replace(pattern, replacement);
+    });
     
     return parsedContent;
 }
