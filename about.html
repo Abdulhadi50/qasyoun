@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500&display=swap" rel="stylesheet">
+    <title>عنّا - قاسيون</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00CC99;
+            --secondary: #e9ecef;
+            --text: #333;
+            --muted: #6c757d;
+            --background: #fff;
+            --card-bg: #ffffff;
+            --success: #00CC99;
+            --hover: #FE2B54;
+            --border: #ddd;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Rubik', sans-serif;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text);
+            padding: 20px;
+            line-height: 1.6;
+            font-size: 0.9em;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 1.5em;
+            font-weight: 500;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        header p {
+            font-size: 0.85em;
+            color: var(--muted);
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            font-size: 1.2em;
+            font-weight: 500;
+            color: var(--primary);
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--primary);
+            padding-bottom: 5px;
+        }
+
+        .section p {
+            font-size: 0.85em;
+            color: var(--text);
+            margin-bottom: 10px;
+        }
+
+        .section ul {
+            padding-right: 20px;
+            margin-bottom: 10px;
+        }
+
+        .section ul li {
+            font-size: 0.85em;
+            color: var(--text);
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .highlight {
+            background: var(--secondary);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-style: italic;
+            color: var(--muted);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.8em;
+            color: var(--muted);
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: var(--hover);
+        }
+
+        /* تحسين التصميم للهاتف */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            header h1 {
+                font-size: 1.3em;
+            }
+
+            header p {
+                font-size: 0.8em;
+            }
+
+            .section h2 {
+                font-size: 1.1em;
+            }
+
+            .section p, .section ul li {
+                font-size: 0.8em;
+            }
+
+            .highlight {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>عنّا</h1>
+            <p>تعرف على قاسيون، وجهتك للتواصل والإبداع!</p>
+        </header>
+
+        <div class="section">
+            <h2>من نحن</h2>
+            <p>نحن في قاسيون فريق شغوف بإنشاء مساحة رقمية تتيح للمستخدمين التعبير عن أفكارهم ومشاركة إبداعاتهم من خلال التغريدات والصور والنصوص. تأسست المنصة بهدف تعزيز التواصل البنّاء بين الأفراد في بيئة آمنة وسهلة الاستخدام.</p>
+            <p class="highlight">رؤيتنا هي أن نكون منصة تُمكّن الجميع من مشاركة قصصهم وآرائهم دون تعقيدات، مع احترام الخصوصية والإبداع.</p>
+        </div>
+
+        <div class="section">
+            <h2>ما الذي نقدمه</h2>
+            <p>قاسيون هي منصة اجتماعية مبتكرة تتيح لك:</p>
+            <ul>
+                <li>نشر التغريدات القصيرة للتعبير عن أفكارك بسرعة.</li>
+                <li>مشاركة الصور والنصوص لإبراز إبداعاتك.</li>
+                <li>التفاعل مع المستخدمين الآخرين عبر الإعجابات والتعليقات.</li>
+                <li>إدارة ملفك الشخصي بسهولة لعكس شخصيتك الفريدة.</li>
+                <li>تجربة خالية من التتبع المفرط، حيث لا نجمع بيانات موقعك أو عنوان IP.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>رؤيتنا وأهدافنا</h2>
+            <p>نسعى في قاسيون إلى:</p>
+            <ul>
+                <li>توفير بيئة آمنة تحترم خصوصية المستخدمين.</li>
+                <li>تشجيع الإبداع والتواصل بين الأفراد من مختلف الخلفيات.</li>
+                <li>تقديم تجربة سهلة وبسيطة تناسب الجميع، سواء كنت مبتدئًا أو محترفًا في التواصل الرقمي.</li>
+                <li>دعم المجتمعات المحلية من خلال منصة تعزز الحوار البنّاء.</li>
+            </ul>
+            <p>هدفنا الأسمى هو بناء مجتمع رقمي يعتمد على الاحترام المتبادل والتعبير الحر.</p>
+        </div>
+
+        <div class="section">
+            <h2>لماذا نختلف</h2>
+            <p>نتميز في قاسيون بـ:</p>
+            <ul>
+                <li><strong>الخصوصية أولاً:</strong> لا نجمع بيانات حساسة مثل الموقع أو عنوان IP.</li>
+                <li><strong>البساطة:</strong> تصميم سهل الاستخدام يناسب جميع الأعمار.</li>
+                <li><strong>الإبداع:</strong> أدوات تتيح لك التعبير بحرية عبر النصوص والصور.</li>
+                <li><strong>الأمان:</strong> حماية قوية لبياناتك ومحتواك.</li>
+            </ul>
+            <p class="highlight">نؤمن أن التواصل الحقيقي لا يحتاج إلى تعقيدات، بل إلى مساحة آمنة ومفتوحة.</p>
+        </div>
+
+        <div class="section">
+            <h2>كيف بدأنا</h2>
+            <p>بدأت فكرة قاسيون من رغبتنا في سد الفجوة بين المنصات الاجتماعية التقليدية والاحتياجات الحديثة للمستخدمين. أردنا إنشاء مكان يجمع بين البساطة والخصوصية، بعيدًا عن التتبع المفرط والإعلانات المزعجة. منذ انطلاقنا في 2025، ونحن نعمل بجد لتحقيق هذا الحلم.</p>
+        </div>
+
+        <div class="section">
+            <h2>التزامنا تجاهك</h2>
+            <p>نلتزم بـ:</p>
+            <ul>
+                <li>تقديم تجربة خالية من التعقيدات مع دعم فني مستمر.</li>
+                <li>احترام خصوصيتك من خلال سياسات شفافة.</li>
+                <li>التطوير المستمر بناءً على ملاحظاتك واقتراحاتك.</li>
+                <li>الحفاظ على بيئة نظيفة خالية من المحتوى المسيء.</li>
+            </ul>
+        </div>
+
+        <footer>
+            <p>تواصل معنا: <a href="mailto:b269379@gmail.com">b269379@gmail.com</a></p>
+            <p>تابع آخر أخبارنا على: <a href="#">[رابط الشبكات الاجتماعية]</a></p>
+            <p>© 2025 قاسيون - جميع الحقوق محفوظة</p>
+        </footer>
+    </div>
+</body>
+</html>
