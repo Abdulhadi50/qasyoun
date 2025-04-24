@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>توثيق الحساب</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00CC99;
+            --secondary: #f1f3f5;
+            --text: #212529;
+            --muted: #6c757d;
+            --background: #f8f9fa;
+            --card-bg: #ffffff;
+            --success: #01B276;
+            --error: #FE2B54;
+            --hover: #00b386;
+            --border: #dee2e6;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Rubik', sans-serif;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text);
+            padding: 10px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .verify-header {
+            brothers: 1px solid var(--border);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--hover) 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            color: white;
+        }
+
+        .verify-header h1 {
+            font-size: 1.8em;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .verify-header .balance {
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: 400;
+        }
+
+        .verify-details {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .verify-details h2 {
+            font-size: 1.4em;
+            color: var(--primary);
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .verify-details p {
+            font-size: 0.95em;
+            color: var(--muted);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .verify-details ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .verify-details ul li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            color: var(--text);
+            font-size: 0.95em;
+            padding: 12px;
+            background: var(--secondary);
+            border-radius: 8px;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .verify-details ul li:hover {
+            transform: translateX(3px);
+            background: var(--primary);
+            color: white;
+        }
+
+        .verify-details ul li .icon-container {
+            width: 32px;
+            height: 32px;
+            background: var(--success);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .verify-details ul li:hover .icon-container {
+            background: white;
+            transform: scale(1.1);
+        }
+
+        .verify-details ul li i {
+            color: white;
+            font-size: 1.1em;
+        }
+
+        .verify-details ul li:hover i {
+            color: var(--success);
+        }
+
+        .verify-action {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .verify-action p {
+            font-size: 1em;
+            color: var(--muted);
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        .verify-action button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--hover));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0, 204, 153, 0.3);
+        }
+
+        .verify-action button:hover:not(:disabled) {
+            background: linear-gradient(135deg, var(--hover), var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 204, 153, 0.4);
+        }
+
+        .verify-action button:disabled {
+            background: var(--muted);
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .verify-action button.loading::after {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #fff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        @keyframes spin {
+            0% { transform: translateY(-50%) rotate(0deg); }
+            100% { transform: translateY(-50%) rotate(360deg); }
+        }
+
+        .custom-alert {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--card-bg);
+            padding: 15px 25px;
+            border-radius: 12px;
+            z-index: 2000;
+            max-width: 90%;
+            width: 320px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .custom-alert.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .custom-alert.success {
+            border-left: 5px solid var(--success);
+        }
+
+        .custom-alert.error {
+            border-left: 5px solid var(--error);
+        }
+
+        .custom-alert p {
+            margin: 0;
+            font-size: 0.95em;
+            color: var(--text);
+        }
+
+        @media (max-width: 500px) {
+            .container {
+                padding: 0 10px;
+            }
+
+            .verify-header h1 {
+                font-size: 1.5em;
+            }
+
+            .verify-details h2 {
+                font-size: 1.2em;
+            }
+
+            .verify-details ul li {
+                font-size: 0.9em;
+                padding: 10px;
+            }
+
+            .verify-action button {
+                padding: 12px;
+                font-size: 0.95em;
+            }
+
+            .custom-alert {
+                width: 280px;
+            }
+        }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-firestore.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="verify-header">
+            <h1>توثيق الحساب</h1>
+            <div class="balance" id="userBalance"><i class="fas fa-wallet"></i> الرصيد: 0</div>
+        </div>
+        <div class="verify-details">
+            <h2>مميزات التوثيق</h2>
+            <p>احصل على علامة التحقق مقابل 2$ من رصيدك!</p>
+            <ul>
+                <li>
+                    <div class="icon-container"><i class="fas fa-check-circle"></i></div>
+                    علامة تحقق بجانب اسمك
+                </li>
+                <li>
+                    <div class="icon-container"><i class="fas fa-check-circle"></i></div>
+                    أولوية في عرض التغريدات
+                </li>
+                <li>
+                    <div class="icon-container"><i class="fas fa-check-circle"></i></div>
+                    إمكانية تحقيق الربح
+                </li>
+                <li>
+                    <div class="icon-container"><i class="fas fa-check-circle"></i></div>
+                    زيادة مصداقية حسابك
+                </li>
+            </ul>
+        </div>
+        <div class="verify-action">
+            <p id="verifyStatus">سعر التوثيق: 2$</p>
+            <button id="verifyButton" onclick="verifyAccount()">دفع وتوثيق الحساب</button>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4aW-Mr469PsIYT8n3jL--GbtRU5OTWdo",
+            authDomain: "smart-pay-6a9b8.firebaseapp.com",
+            projectId: "smart-pay-6a9b8",
+            storageBucket: "smart-pay-6a9b8.appspot.com",
+            messagingSenderId: "9418007073",
+            appId: "1:9418007073:web:72e0144eb56524fc263960"
+        };
+
+        try {
+            firebase.initializeApp(firebaseConfig);
+            console.log("Firebase تم تهيئته بنجاح");
+        } catch (error) {
+            console.error("خطأ في تهيئة Firebase:", error);
+            showCustomAlert("خطأ في تهيئة التطبيق: " + error.message, 'error');
+        }
+
+        const db = firebase.firestore();
+        let currentUserData = {};
+
+        firebase.auth().onAuthStateChanged(async (user) => {
+            if (user) {
+                try {
+                    const userDoc = await db.collection('users').doc(user.uid).get();
+                    currentUserData = userDoc.exists ? userDoc.data() : {};
+                    loadUserData(user.uid);
+                } catch (error) {
+                    console.error("خطأ في جلب بيانات المستخدم:", error);
+                    showCustomAlert("خطأ في جلب بيانات المستخدم: " + error.message, 'error');
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        function loadUserData(userId) {
+            const userBalance = document.getElementById('userBalance');
+            const verifyStatus = document.getElementById('verifyStatus');
+            const verifyButton = document.getElementById('verifyButton');
+
+            userBalance.innerHTML = `<i class="fas fa-wallet"></i> الرصيد: ${currentUserData.balance || 0} $`;
+
+            if (currentUserData.verified) {
+                verifyStatus.textContent = "حسابك موثق بالفعل!";
+                verifyButton.innerHTML = '<i class="fas fa-check"></i> تم التوثيق';
+                verifyButton.disabled = true;
+            } else {
+                verifyStatus.textContent = "سعر التوثيق: 2$";
+                verifyButton.innerHTML = '<i class="fas fa-lock-open"></i> دفع وتوثيق الحساب';
+                verifyButton.disabled = (currentUserData.balance || 0) < 2;
+                if ((currentUserData.balance || 0) < 2) {
+                    verifyStatus.textContent += " (رصيدك غير كافٍ)";
+                }
+            }
+        }
+
+        async function verifyAccount() {
+            const user = firebase.auth().currentUser;
+            if (!user) return;
+
+            const verifyButton = document.getElementById('verifyButton');
+            verifyButton.classList.add('loading');
+            verifyButton.disabled = true;
+
+            try {
+                const userRef = db.collection('users').doc(user.uid);
+                const userDoc = await userRef.get();
+                const currentBalance = userDoc.data().balance || 0;
+
+                if (currentBalance < 2) {
+                    showCustomAlert("رصيدك غير كافٍ للتوثيق!", 'error');
+                    return;
+                }
+
+                await userRef.update({
+                    balance: currentBalance - 2,
+                    verified: true
+                });
+
+                const tweetsSnapshot = await db.collection('tweets').where('userId', '==', user.uid).get();
+                const batch = db.batch();
+                tweetsSnapshot.forEach(doc => {
+                    batch.update(doc.ref, { verified: true });
+                });
+                await batch.commit();
+
+                currentUserData.balance = currentBalance - 2;
+                currentUserData.verified = true;
+                loadUserData(user.uid);
+                showCustomAlert("تم توثيق حسابك بنجاح!", 'success');
+            } catch (error) {
+                console.error("خطأ في توثيق الحساب:", error);
+                showCustomAlert("خطأ في توثيق الحساب: " + error.message, 'error');
+            } finally {
+                verifyButton.classList.remove('loading');
+            }
+        }
+
+        function showCustomAlert(message, type = 'success') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `custom-alert ${type}`;
+            alertDiv.innerHTML = `<p>${message}</p>`;
+            document.body.appendChild(alertDiv);
+            setTimeout(() => alertDiv.classList.add('show'), 10);
+            setTimeout(() => alertDiv.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
