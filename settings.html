@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>الإعدادات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00CC99;
+            --secondary: #f1f3f5;
+            --text: #212529;
+            --muted: #6c757d;
+            --background: #fff;
+            --card-bg: #ffffff;
+            --success: #01B276;
+            --error: #FE2B54;
+            --hover: #00b386;
+            --border: #dee2e6;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Rubik', sans-serif;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text);
+            padding: 10px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            user-select: none;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .settings-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--hover) 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .settings-header h1 {
+            font-size: 1.8em;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .settings-section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .section-title {
+            padding: 15px 20px;
+            background: var(--secondary);
+            font-size: 1.1em;
+            font-weight: 500;
+            color: var(--text);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-item:hover {
+            background: var(--secondary);
+            transform: translateX(3px);
+        }
+
+        .setting-item .icon-container {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .setting-item:hover .icon-container {
+            background: var(--hover);
+            transform: scale(1.1);
+        }
+
+        .setting-item i {
+            color: white;
+            font-size: 1.2em;
+        }
+
+        .setting-item span {
+            font-size: 1em;
+            font-weight: 400;
+            color: var(--text);
+        }
+
+        .setting-item.logout {
+            background: var(--error);
+            color: white;
+            border-radius: 10px;
+            margin: 15px 20px;
+            padding: 15px;
+        }
+
+        .setting-item.logout:hover {
+            background: #c82333;
+            transform: translateX(0);
+        }
+
+        .setting-item.logout .icon-container {
+            background: white;
+        }
+
+        .setting-item.logout i {
+            color: var(--error);
+        }
+
+        .custom-alert {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            z-index: 2000;
+            max-width: 90%;
+            width: 320px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .custom-alert.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .custom-alert.success {
+            border-left: 5px solid var(--success);
+        }
+
+        .custom-alert.error {
+            border-left: 5px solid var(--error);
+        }
+
+        .custom-alert p {
+            margin: 0 0 15px;
+            font-size: 0.95em;
+            color: var(--text);
+        }
+
+        .custom-alert .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .custom-alert button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .custom-alert button:hover {
+            background: var(--hover);
+            transform: translateY(-2px);
+        }
+
+        .custom-alert button.cancel {
+            background: var(--muted);
+            color: var(--text);
+        }
+
+        .custom-alert button.cancel:hover {
+            background: #5a6268;
+            color: white;
+        }
+
+        @media (max-width: 500px) {
+            .container {
+                padding: 0 10px;
+            }
+
+            .settings-header h1 {
+                font-size: 1.5em;
+            }
+
+            .setting-item span {
+                font-size: 0.95em;
+            }
+
+            .setting-item .icon-container {
+                width: 35px;
+                height: 35px;
+            }
+
+            .custom-alert {
+                width: 280px;
+            }
+        }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-auth.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="settings-header">
+            <h1>الإعدادات</h1>
+        </div>
+        <div class="settings-section">
+            <div class="section-title">إعدادات الحساب</div>
+            <div class="setting-item" onclick="navigateTo('profile.html')">
+                <span>تعديل الملف الشخصي</span>
+                <div class="icon-container"><i class="fas fa-user-edit"></i></div>
+            </div>
+            <div class="setting-item" onclick="navigateTo('verify.html')">
+                <span>توثيق الحساب</span>
+                <div class="icon-container"><i class="fas fa-check-circle"></i></div>
+            </div>
+        </div>
+        <div class="settings-section">
+            <div class="section-title">السياسات والمعلومات</div>
+            <div class="setting-item" onclick="navigateTo('privacy.html')">
+                <span>سياسة الخصوصية</span>
+                <div class="icon-container"><i class="fas fa-shield-alt"></i></div>
+            </div>
+            <div class="setting-item" onclick="navigateTo('terms.html')">
+                <span>شروط الاستخدام</span>
+                <div class="icon-container"><i class="fas fa-file-alt"></i></div>
+            </div>
+            <div class="setting-item" onclick="navigateTo('about.html')">
+                <span>عنا</span>
+                <div class="icon-container"><i class="fas fa-info-circle"></i></div>
+            </div>
+        </div>
+        <div class="settings-section">
+            <div class="section-title">الدعم</div>
+            <div class="setting-item" onclick="navigateTo('support.html')">
+                <span>تواصل مع الدعم</span>
+                <div class="icon-container"><i class="fas fa-headset"></i></div>
+            </div>
+            <div class="setting-item logout" onclick="showLogoutConfirm()">
+                <span>تسجيل الخروج</span>
+                <div class="icon-container"><i class="fas fa-sign-out-alt"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4aW-Mr469PsIYT8n3jL--GbtRU5OTWdo",
+            authDomain: "smart-pay-6a9b8.firebaseapp.com",
+            projectId: "smart-pay-6a9b8",
+            storageBucket: "smart-pay-6a9b8.appspot.com",
+            messagingSenderId: "9418007073",
+            appId: "1:9418007073:web:72e0144eb56524fc263960"
+        };
+
+        try {
+            firebase.initializeApp(firebaseConfig);
+            console.log("Firebase تم تهيئته بنجاح");
+        } catch (error) {
+            console.error("خطأ في تهيئة Firebase:", error);
+            showCustomAlert("خطأ في تهيئة التطبيق: " + error.message, 'error');
+        }
+
+        firebase.auth().onAuthStateChanged((user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+            }
+        });
+
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+
+        function showLogoutConfirm() {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'custom-alert';
+            alertDiv.innerHTML = `
+                <p>هل أنت متأكد من تسجيل الخروج؟</p>
+                <div class="btn-container">
+                    <button class="confirm" onclick="logout()">نعم</button>
+                    <button class="cancel" onclick="this.parentElement.parentElement.remove()">لا</button>
+                </div>
+            `;
+            document.body.appendChild(alertDiv);
+            setTimeout(() => alertDiv.classList.add('show'), 10);
+        }
+
+        async function logout() {
+            try {
+                await firebase.auth().signOut();
+                showCustomAlert("تم تسجيل الخروج بنجاح!", 'success');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1500);
+            } catch (error) {
+                console.error("خطأ في تسجيل الخروج:", error);
+                showCustomAlert("خطأ في تسجيل الخروج: " + error.message, 'error');
+            }
+        }
+
+        function showCustomAlert(message, type = 'success') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `custom-alert ${type}`;
+            alertDiv.innerHTML = `<p>${message}</p>`;
+            document.body.appendChild(alertDiv);
+            setTimeout(() => alertDiv.classList.add('show'), 10);
+            setTimeout(() => alertDiv.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
