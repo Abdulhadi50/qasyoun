@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500&display=swap" rel="stylesheet">
+    <title>سياسة الخصوصية وشروط الاستخدام</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00CC99;
+            --secondary: #e9ecef;
+            --text: #333;
+            --muted: #6c757d;
+            --background: #fff;
+            --card-bg: #ffffff;
+            --success: #00CC99;
+            --error: #dc3545;
+            --hover: #00CC99;
+            --border: #ddd;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Rubik', sans-serif;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text);
+            padding: 20px;
+            line-height: 1.6;
+            font-size: 0.9em;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 1.5em;
+            font-weight: 500;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        header p {
+            font-size: 0.85em;
+            color: var(--muted);
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: space-around;
+            background: var(--secondary);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .tab-btn {
+            font-size: 0.9em;
+            padding: 10px 20px;
+            color: var(--muted);
+            background: none;
+            border: none;
+            transition: all 0.3s ease;
+            flex: 1;
+            text-align: center;
+        }
+
+        .tab-btn.active {
+            color: #fff;
+            background: var(--primary);
+            border-radius: 8px;
+        }
+
+        .tab-btn:hover {
+            color: var(--hover);
+        }
+
+        .tab-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            font-size: 1.2em;
+            font-weight: 500;
+            color: var(--primary);
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--primary);
+            padding-bottom: 5px;
+        }
+
+        .section p {
+            font-size: 0.85em;
+            color: var(--text);
+            margin-bottom: 10px;
+        }
+
+        .section ul, .section ol {
+            padding-right: 20px;
+            margin-bottom: 10px;
+        }
+
+        .section ul li, .section ol li {
+            font-size: 0.85em;
+            color: var(--text);
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.8em;
+            color: var(--muted);
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: var(--hover);
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            header h1 {
+                font-size: 1.3em;
+            }
+
+            header p {
+                font-size: 0.8em;
+            }
+
+            .tab-btn {
+                font-size: 0.85em;
+                padding: 8px 15px;
+            }
+
+            .section h2 {
+                font-size: 1.1em;
+            }
+
+            .section p, .section ul li, .section ol li {
+                font-size: 0.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>سياسة الخصوصية وشروط الاستخدام</h1>
+            <p>مرحبًا بك في رقاسيون! اقرأ هذه السياسات والشروط بعناية قبل استخدام خدماتنا.</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('privacy')">سياسة الخصوصية</button>
+            <button class="tab-btn" onclick="showTab('terms')">شروط الاستخدام</button>
+        </div>
+
+        <!-- قسم سياسة الخصوصية -->
+        <div id="privacy" class="tab-content active">
+            <div class="section">
+                <h2>مقدمة</h2>
+                <p>نحن في رقاسيون ملتزمون بحماية خصوصية مستخدمينا. توضح هذه السياسة كيفية جمع بياناتك الشخصية واستخدامها وحمايتها أثناء استخدامك للمنصة التي تتيح نشر التغريدات والصور والنصوص.</p>
+            </div>
+
+            <div class="section">
+                <h2>1. المعلومات التي نجمعها</h2>
+                <p>نجمع المعلومات التالية لتقديم خدماتنا:</p>
+                <ul>
+                    <li>معلومات الحساب: الاسم، المعرف، والبريد الإلكتروني عند إنشاء حساب.</li>
+                    <li>المحتوى المنشور: التغريدات، الصور، النصوص، والتعليقات التي تشاركها.</li>
+                    <li>بيانات الاستخدام: التفاعلات مثل الإعجابات، التعليقات، والوقت المستغرق.</li>
+                    <li>معلومات الجهاز: نوع الجهاز ونظام التشغيل فقط (لا نجمع عنوان IP أو بيانات الموقع).</li>
+                </ul>
+                <p><strong>ملاحظة:</strong> لا نجمع بيانات الموقع الجغرافي أو عناوين IP للمستخدمين لضمان خصوصيتك.</p>
+            </div>
+
+            <div class="section">
+                <h2>2. كيفية استخدام معلوماتك</h2>
+                <p>نستخدم بياناتك للأغراض التالية:</p>
+                <ul>
+                    <li>تشغيل المنصة وإدارة حسابك.</li>
+                    <li>تحسين الخدمات عبر تحليل التفاعلات دون التعرف على هويتك الدقيقة.</li>
+                    <li>إرسال إشعارات حول التحديثات أو الأنشطة المتعلقة بحسابك.</li>
+                    <li>الكشف عن الأنشطة المخالفة وحماية أمان المنصة.</li>
+                    <li>تقديم دعم فني عند الحاجة.</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>3. مشاركة المعلومات</h2>
+                <p>نحافظ على سرية بياناتك ولا نشاركها إلا في الحالات التالية:</p>
+                <ul>
+                    <li>مع مزودي الخدمات الموثوقين لتشغيل المنصة (مثل التخزين السحابي).</li>
+                    <li>للامتثال للقوانين أو الطلبات القضائية المشروعة.</li>
+                    <li>في حالة انتقال ملكية المنصة إلى طرف آخر.</li>
+                    <li>بموافقتك الصريحة مسبقًا.</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>4. حماية بياناتك</h2>
+                <p>نعتمد على تقنيات حديثة لحماية بياناتك، مثل:</p>
+                <ul>
+                    <li>تشفير البيانات أثناء النقل والتخزين.</li>
+                    <li>فحص الأنظمة بانتظام لمنع الاختراقات.</li>
+                    <li>تطبيق سياسات صارمة للوصول إلى البيانات داخل الفريق.</li>
+                </ul>
+                <p>مع ذلك، لا يمكن ضمان الحماية الكاملة، لذا ننصحك بحماية حسابك بكلمة مرور قوية.</p>
+            </div>
+
+            <div class="section">
+                <h2>5. حقوقك</h2>
+                <p>لديك الحقوق التالية:</p>
+                <ul>
+                    <li>عرض بياناتك الشخصية أو طلب نسخة منها.</li>
+                    <li>تعديل معلوماتك إذا كانت غير صحيحة.</li>
+                    <li>طلب حذف حسابك وبياناتك مع مراعاة الاحتفاظ بالسجلات القانونية.</li>
+                    <li>رفض تلقي الرسائل الترويجية أو الإشعارات غير الضرورية.</li>
+                    <li>الاستفسار عن أي استخدام لبياناتك عبر التواصل معنا.</li>
+                </ul>
+                <p>راسلنا على: <a href="mailto:b269379@gmail.com">b269379@gmail.com</a> لممارسة حقوقك.</p>
+            </div>
+
+            <div class="section">
+                <h2>6. ملفات تعريف الارتباط (Cookies)</h2>
+                <p>نستخدم ملفات تعريف الارتباط الأساسية فقط ل:</p>
+                <ul>
+                    <li>تسجيل الدخول والحفاظ على جلساتك.</li>
+                    <li>تحسين الأداء دون تتبع سلوكك الشخصي.</li>
+                </ul>
+                <p>لا نستخدم ملفات تعريف الارتباط للتتبع الإعلاني أو جمع بيانات دقيقة عنك.</p>
+            </div>
+
+            <div class="section">
+                <h2>7. التغييرات على السياسة</h2>
+                <p>قد نعدل هذه السياسة، وسنبلغك بالتحديثات عبر المنصة أو البريد الإلكتروني.</p>
+            </div>
+        </div>
+
+        <!-- قسم شروط الاستخدام -->
+        <div id="terms" class="tab-content">
+            <div class="section">
+                <h2>مقدمة</h2>
+                <p>توضح هذه الشروط القواعد التي تحكم استخدامك لـ رقاسيون. موافقتك عليها شرط لاستخدام الخدمة.</p>
+            </div>
+
+            <div class="section">
+                <h2>1. التسجيل والحسابات</h2>
+                <ol>
+                    <li>يجب أن تكون بعمر 13 عامًا على الأقل للتسجيل.</li>
+                    <li>أنت مسؤول عن حماية حسابك وكلمة المرور.</li>
+                    <li>يُحظر إنشاء حسابات متعددة أو استخدام بيانات غير صحيحة.</li>
+                    <li>يُمنع مشاركة حسابك مع الآخرين أو بيعه.</li>
+                    <li>نحتفظ بحق تعليق أو إغلاق حسابك عند الانتهاك.</li>
+                </ol>
+            </div>
+
+            <div class="section">
+                <h2>2. المحتوى المسموح</h2>
+                <p>يجب أن يلتزم المحتوى المنشور بالتالي:</p>
+                <ul>
+                    <li>عدم احتوائه على مواد غير قانونية أو تحرض على العنف.</li>
+                    <li>عدم انتهاك حقوق الطبع والنشر أو استخدام محتوى دون إذن.</li>
+                    <li>عدم نشر محتوى جنسي صريح أو مسيء أو يروج للكراهية.</li>
+                    <li>يُحظر نشر معلومات مضللة أو إعلانات غير مشروعة.</li>
+                    <li>يجب أن تكون الصور والنصوص خالية من البرمجيات الضارة.</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>3. حقوق الملكية الفكرية</h2>
+                <p>فيما يتعلق بالمحتوى:</p>
+                <ul>
+                    <li>تبقى ملكيتك الفكرية للمحتوى الذي تنشره.</li>
+                    <li>تمنحنا ترخيصًا غير حصري لعرض محتواك على المنصة.</li>
+                    <li>جميع عناصر المنصة (التصميم، الشعار، البرمجيات) محمية بحقوقنا.</li>
+                    <li>يُمنع إعادة إنتاج أو توزيع أي جزء من المنصة دون موافقة خطية.</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>4. السلوك الممنوع</h2>
+                <p>يُحظر على المنصة:</p>
+                <ul>
+                    <li>إرسال رسائل غير مرغوب فيها (سبام).</li>
+                    <li>محاولة التلاعب بالنظام أو اختراق الحسابات.</li>
+                    <li>استخدام أدوات آلية أو روبوتات دون تصريح.</li>
+                    <li>انتحال شخصية الآخرين أو تقديم بيانات مزيفة.</li>
+                    <li>التدخل في عمل المنصة أو تجربة المستخدمين.</li>
+                    <li>نشر روابط ضارة أو خادعة.</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>5. الامتثال لسياسة المحتوى</h2>
+                <p>نحتفظ بالحق في:</p>
+                <ul>
+                    <li>مراجعة المحتوى وحذفه إذا كان مخالفًا دون إشعار مسبق.</li>
+                    <li>إبلاغ السلطات عن أي محتوى غير قانوني.</li>
+                    <li>تقييد وصولك إلى ميزات معينة إذا انتهكت السياسة.</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>6. إنهاء الخدمة</h2>
+                <p>يمكننا:</p>
+                <ul>
+                    <li>حذف المحتوى المخالف فورًا.</li>
+                    <li>تعليق أو إنهاء حسابك عند الانتهاك المتكرر.</li>
+                    <li>إيقاف الخدمة مؤقتًا أو دائمًا لأسباب تشغيلية أو قانونية.</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>7. حدود المسؤولية</h2>
+                <p>نحن غير مسؤولين عن:</p>
+                <ul>
+                    <li>صحة أو قانونية المحتوى الذي ينشره المستخدمون.</li>
+                    <li>أي أضرار ناتجة عن استخدامك للمنصة.</li>
+                    <li>الخسائر الناتجة عن انقطاع الخدمة أو الأعطال الفنية.</li>
+                    <li>التفاعلات بينك وبين مستخدمين آخرين.</li>
+                </ul>
+                <p>الخدمة مقدمة "كما هي" دون ضمانات.</p>
+            </div>
+
+            <div class="section">
+                <h2>8. التعديلات</h2>
+                <p>قد نعدل هذه الشروط، وسنبلغك عبر المنصة. استمرارك يعني موافقتك.</p>
+            </div>
+
+            <div class="section">
+                <h2>9. القوانين المعمول بها</h2>
+                <p>تخضع هذه الشروط لقوانين [اسم الدولة] وتُحل النزاعات وفقًا لها.</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>تواصل معنا: <a href="mailto:b269379@gmail.com">b269379@gmail.com</a></p>
+            <p>آخر تحديث: 24 أبريل 2025</p>
+        </footer>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            const contents = document.querySelectorAll('.tab-content');
+            const buttons = document.querySelectorAll('.tab-btn');
+
+            contents.forEach(content => {
+                content.classList.remove('active');
+                content.style.opacity = '0';
+            });
+
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            const selectedContent = document.getElementById(tabId);
+            const selectedBtn = document.querySelector(`.tab-btn[onclick="showTab('${tabId}')"]`);
+            
+            selectedContent.classList.add('active');
+            selectedBtn.classList.add('active');
+
+            setTimeout(() => {
+                selectedContent.style.opacity = '1';
+            }, 50);
+        }
+    </script>
+</body>
+</html>
